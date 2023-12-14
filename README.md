@@ -1,3 +1,3 @@
-# movies_app
+# MoviesApp
 
-A new Flutter project.
+A Flutter project showcase to improve my skills!
