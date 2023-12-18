@@ -15,14 +15,14 @@ class FilmResponse {
 
   factory FilmResponse.fromJson(Map<String, dynamic> json) => FilmResponse(
         page: json["page"],
-        results: List<Film>.from(json["results"].map((x) => Film.fromJson(x))),
+        results: List<Film>.from(json["results"].map((x) => Film.fromMap(x))),
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
       );
 
   Map<String, dynamic> toJson() => {
         "page": page,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
+        "results": List<dynamic>.from(results.map((x) => x.toMap())),
         "total_pages": totalPages,
         "total_results": totalResults,
       };
@@ -67,7 +67,7 @@ class Film {
     required this.voteCount,
   });
 
-  factory Film.fromJson(Map<String, dynamic> json) => Film(
+  factory Film.fromMap(Map<String, dynamic> json) => Film(
         adult: json["adult"],
         backdropPath: json["backdrop_path"],
         budget: json["budget"],
@@ -87,7 +87,7 @@ class Film {
         voteCount: json["vote_count"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "adult": adult,
         "backdrop_path": backdropPath,
         "budget": budget,
