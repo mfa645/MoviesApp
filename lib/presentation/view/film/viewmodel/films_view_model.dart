@@ -15,11 +15,30 @@ class FilmsViewModel extends BaseViewModel {
   final StreamController<ResourceState<Film>> getFilmDetailState =
       StreamController();
 
-  final StreamController<ResourceState<Film>> getFilmsState =
+  final StreamController<ResourceState<FilmResponse>> getFilmsState =
       StreamController();
 
   FilmsViewModel({required FilmsRepository filmsRepository})
       : _filmsRepository = filmsRepository;
+
+  fetchFilmGenres() {
+    getFilmGenresState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getFilmGenres()
+        .then((value) => getFilmGenresState.add(ResourceState.success(value)))
+        .catchError(
+            (error) => getFilmGenresState.add(ResourceState.error(error)));
+  }
+
+  fetchFilms() {
+    getFilmsState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getFilms()
+        .then((value) => getFilmsState.add(ResourceState.success(value)))
+        .catchError((error) => getFilmsState.add(ResourceState.error(error)));
+  }
 
   @override
   void dispose() {
