@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/di/app_modules.dart';
-import 'package:movies_app/presentation/view/film/film_search_page.dart';
+import 'package:movies_app/presentation/view/film/film_discover_page.dart';
 
 void main() {
   AppModules().setup();
@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: FilmsSearchPage(),
+      home: FilmsDiscoverPage(),
     );
   }
 }

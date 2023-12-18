@@ -6,16 +6,18 @@ import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dar
 import 'package:movies_app/presentation/widget/error/error_view.dart';
 import 'package:movies_app/presentation/widget/loading/loading_view.dart';
 
-class FilmsSearchPage extends StatefulWidget {
-  const FilmsSearchPage({super.key});
+class FilmHomePage extends StatefulWidget {
+  const FilmHomePage({super.key});
 
   @override
-  State<FilmsSearchPage> createState() => _FilmsSearchPageState();
+  State<FilmHomePage> createState() => _FilmHomePageState();
 }
 
-class _FilmsSearchPageState extends State<FilmsSearchPage> {
+class _FilmHomePageState extends State<FilmHomePage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
-  List<Film> _films = [];
+  List<Film> _upcomingFilms = [];
+  final List<Film> _topRatedFilms = [];
+  final List<Film> _weekTrendingFilms = [];
 
   @override
   void initState() {
@@ -29,7 +31,7 @@ class _FilmsSearchPageState extends State<FilmsSearchPage> {
         case Status.SUCCESS:
           LoadingView.hide();
           setState(() {
-            _films = state.data!.results;
+            _upcomingFilms = state.data!.results;
           });
           break;
         case Status.ERROR:
@@ -46,22 +48,6 @@ class _FilmsSearchPageState extends State<FilmsSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Films"),
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: _films.length,
-          itemBuilder: (_, index) {
-            final film = _films[index];
-
-            return ListTile(
-              title: Text(film.title),
-            );
-          },
-        ),
-      ),
-    );
+    return const Placeholder();
   }
 }

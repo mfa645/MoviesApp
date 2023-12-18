@@ -40,6 +40,51 @@ class FilmsViewModel extends BaseViewModel {
         .catchError((error) => getFilmsState.add(ResourceState.error(error)));
   }
 
+  fetchUpcomingFilms() {
+    getFilmsState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getUpcomingFilms()
+        .then((value) => getFilmsState.add(ResourceState.success(value)))
+        .catchError((error) => getFilmsState.add(ResourceState.error(error)));
+  }
+
+  fetchWeekTrendingFilms() {
+    getFilmsState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getWeekTrendingFilms()
+        .then((value) => getFilmsState.add(ResourceState.success(value)))
+        .catchError((error) => getFilmsState.add(ResourceState.error(error)));
+  }
+
+  fetchTopRatedFilms() {
+    getFilmsState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getTopRatedFilms()
+        .then((value) => getFilmsState.add(ResourceState.success(value)))
+        .catchError((error) => getFilmsState.add(ResourceState.error(error)));
+  }
+
+  fetchFilmsByTitle(String title) {
+    getFilmsState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getFilmsByTitle(title)
+        .then((value) => getFilmsState.add(ResourceState.success(value)))
+        .catchError((error) => getFilmsState.add(ResourceState.error(error)));
+  }
+
+  fetchFilmDetails(int id) {
+    getFilmsState.add(ResourceState.loading());
+
+    _filmsRepository
+        .getFilmDetails(id)
+        .then((value) => getFilmDetailState.add(ResourceState.success(value)))
+        .catchError((error) => getFilmsState.add(ResourceState.error(error)));
+  }
+
   @override
   void dispose() {
     getFilmDetailState.close();

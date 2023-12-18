@@ -73,9 +73,9 @@ class FilmsRemoteImpl {
       final response = await _networkClient.dio
           .get(NetworkConstants.GENRES_PATH, queryParameters: apiKey);
 
-      final genresResponse = GenreResponse.fromJson(response.data);
+      final genres = GenreResponse.fromJson(response.data).genres;
 
-      return genresResponse.genres;
+      return genres;
     } catch (e) {
       throw RemoteErrorMapper.getException(e);
     }

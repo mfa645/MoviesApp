@@ -29,9 +29,9 @@ class FilmResponse {
 }
 
 class Film {
-  bool adult;
+  bool? adult;
   String? backdropPath;
-  int budget;
+  int? budget;
   List<Genre>? genres;
   int id;
   String originalLanguage;
@@ -68,10 +68,12 @@ class Film {
   });
 
   factory Film.fromMap(Map<String, dynamic> json) => Film(
-        adult: json["adult"],
+        adult: json["adult"] ? null : json["adult"],
         backdropPath: json["backdrop_path"],
         budget: json["budget"],
-        genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
+        genres: json["genres"] != null
+            ? List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x)))
+            : null,
         id: json["id"],
         originalLanguage: json["original_language"],
         originalTitle: json["original_title"],
@@ -83,12 +85,12 @@ class Film {
         status: json["status"],
         tagline: json["tagline"],
         title: json["title"],
-        voteAverage: json["vote_average"],
+        voteAverage: json["vote_average"] + 0.0,
         voteCount: json["vote_count"],
       );
 
   Map<String, dynamic> toMap() => {
-        "adult": adult,
+        "adult": adult ?? false,
         "backdrop_path": backdropPath,
         "budget": budget,
         "genres": genres != null
