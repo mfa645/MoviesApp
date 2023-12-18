@@ -1,16 +1,19 @@
 name: movies_app
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: ">=3.2.0 <4.0.0"
 
 dependencies:
+  cached_network_image: ^3.3.0
   dio: ^5.4.0
   flutter:
     sdk: flutter
   get_it: ^7.6.4
+  scroll_snap_list: ^0.9.1
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -19,3 +22,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/

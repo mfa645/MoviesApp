@@ -2,6 +2,7 @@ class NetworkConstants {
   static const BASE_URL = "https://api.themoviedb.org/3";
 
   static const FILMS_PATH = "$BASE_URL/movie";
+  static const IMAGES_PATH = "https://image.tmdb.org/t/p/w500";
   //Videos
   //Similar
   //Reviews
