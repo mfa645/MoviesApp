@@ -8,14 +8,14 @@ import 'package:movies_app/presentation/widget/film_horizontal_list.dart';
 import 'package:movies_app/presentation/widget/loading/loading_view.dart';
 import 'package:movies_app/presentation/widget/upcoming_films_horizontal_list.dart';
 
-class FilmHomePage extends StatefulWidget {
-  const FilmHomePage({super.key});
+class FilmsHomePage extends StatefulWidget {
+  const FilmsHomePage({super.key});
 
   @override
-  State<FilmHomePage> createState() => _FilmHomePageState();
+  State<FilmsHomePage> createState() => _FilmsHomePageState();
 }
 
-class _FilmHomePageState extends State<FilmHomePage> {
+class _FilmsHomePageState extends State<FilmsHomePage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
   List<Film> _upcomingFilms = [];
   List<Film> _topRatedFilms = [];
@@ -25,45 +25,7 @@ class _FilmHomePageState extends State<FilmHomePage> {
   void initState() {
     super.initState();
 
-    _filmsViewModel.getUpcomingFilmsResponseState.stream.listen((state) {
-      switch (state.status) {
-        case Status.LOADING:
-          LoadingView.show(context);
-          break;
-        case Status.SUCCESS:
-          LoadingView.hide();
-          setState(() {
-            _upcomingFilms = state.data!.results;
-          });
-          break;
-        case Status.ERROR:
-          LoadingView.hide();
-          ErrorView.show(context, state.exception!.toString(), () {
-            _filmsViewModel.fetchUpcomingFilms();
-          });
-          break;
-      }
-    });
-    _filmsViewModel.getTopRatedFilmsResponseState.stream.listen((state) {
-      switch (state.status) {
-        case Status.LOADING:
-          LoadingView.show(context);
-          break;
-        case Status.SUCCESS:
-          LoadingView.hide();
-          setState(() {
-            _topRatedFilms = state.data!.results;
-          });
-          break;
-        case Status.ERROR:
-          LoadingView.hide();
-          ErrorView.show(context, state.exception!.toString(), () {
-            _filmsViewModel.fetchTopRatedFilms();
-          });
-          break;
-      }
-    });
-    _filmsViewModel.getWeekTrendingFilmsResponseState.stream.listen((state) {
+    _filmsViewModel.getWeekTrendingFilmsState.stream.listen((state) {
       switch (state.status) {
         case Status.LOADING:
           LoadingView.show(context);
@@ -82,8 +44,48 @@ class _FilmHomePageState extends State<FilmHomePage> {
           break;
       }
     });
+    _filmsViewModel.getUpcomingFilmsState.stream.listen((state) {
+      switch (state.status) {
+        case Status.LOADING:
+          LoadingView.show(context);
+          break;
+        case Status.SUCCESS:
+          LoadingView.hide();
+          setState(() {
+            _upcomingFilms = state.data!.results;
+          });
+          break;
+        case Status.ERROR:
+          LoadingView.hide();
+          ErrorView.show(context, state.exception!.toString(), () {
+            _filmsViewModel.fetchUpcomingFilms();
+          });
+          break;
+      }
+    });
+    _filmsViewModel.getTopRatedFilmsState.stream.listen((state) {
+      switch (state.status) {
+        case Status.LOADING:
+          LoadingView.show(context);
+          break;
+        case Status.SUCCESS:
+          LoadingView.hide();
+          setState(() {
+            _topRatedFilms = state.data!.results;
+          });
+          break;
+        case Status.ERROR:
+          LoadingView.hide();
+          ErrorView.show(context, state.exception!.toString(), () {
+            _filmsViewModel.fetchTopRatedFilms();
+          });
+          break;
+      }
+    });
 
-    _filmsViewModel.fetchHomeFilms();
+    _filmsViewModel.fetchWeekTrendingFilms();
+    _filmsViewModel.fetchUpcomingFilms();
+    _filmsViewModel.fetchTopRatedFilms();
   }
 
   @override
@@ -99,12 +101,12 @@ class _FilmHomePageState extends State<FilmHomePage> {
           children: [
             UpcomingFilmsHorizontalList(films: _upcomingFilms),
             FilmHorizontalList(
-              title: "TOP RATED",
-              films: _topRatedFilms,
-            ),
-            FilmHorizontalList(
               title: "WEEK TRENDS",
               films: _weekTrendingFilms,
+            ),
+            FilmHorizontalList(
+              title: "TOP RATED",
+              films: _topRatedFilms,
             ),
           ],
         ),

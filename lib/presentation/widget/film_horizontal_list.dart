@@ -22,21 +22,24 @@ class FilmHorizontalList extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ),
-        SizedBox(
-          height: 240,
-          child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: films.length,
-              itemBuilder: (_, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FilmListColumn(
-                    film: films[index],
-                  ),
-                );
-              }),
-        ),
+        if (films.isNotEmpty)
+          SizedBox(
+            height: 240,
+            child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: films.length,
+                itemBuilder: (_, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FilmListColumn(
+                      film: films[index],
+                    ),
+                  );
+                }),
+          )
+        else
+          const Text("No films availables yet"),
       ],
     ));
   }

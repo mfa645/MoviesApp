@@ -19,13 +19,11 @@ class FilmsViewModel extends BaseViewModel {
 
   final StreamController<FilmResponseState> getFilmsState = StreamController();
 
-  final StreamController<FilmResponseState> getUpcomingFilmsResponseState =
+  final StreamController<FilmResponseState> getUpcomingFilmsState =
       StreamController();
-
-  final StreamController<FilmResponseState> getTopRatedFilmsResponseState =
+  final StreamController<FilmResponseState> getTopRatedFilmsState =
       StreamController();
-
-  final StreamController<FilmResponseState> getWeekTrendingFilmsResponseState =
+  final StreamController<FilmResponseState> getWeekTrendingFilmsState =
       StreamController();
 
   FilmsViewModel({required FilmsRepository filmsRepository})
@@ -50,37 +48,37 @@ class FilmsViewModel extends BaseViewModel {
         .catchError((error) => getFilmsState.add(ResourceState.error(error)));
   }
 
-  fetchUpcomingFilms() {
-    getUpcomingFilmsResponseState.add(ResourceState.loading());
+  fetchTopRatedFilms() {
+    getTopRatedFilmsState.add(ResourceState.loading());
 
     _filmsRepository
-        .getUpcomingFilms()
-        .then((value) =>
-            getUpcomingFilmsResponseState.add(ResourceState.success(value)))
-        .catchError((error) =>
-            getUpcomingFilmsResponseState.add(ResourceState.error(error)));
+        .getTopRatedFilms()
+        .then(
+            (value) => getTopRatedFilmsState.add(ResourceState.success(value)))
+        .catchError(
+            (error) => getTopRatedFilmsState.add(ResourceState.error(error)));
   }
 
   fetchWeekTrendingFilms() {
-    getWeekTrendingFilmsResponseState.add(ResourceState.loading());
+    getWeekTrendingFilmsState.add(ResourceState.loading());
 
     _filmsRepository
         .getWeekTrendingFilms()
         .then((value) =>
-            getWeekTrendingFilmsResponseState.add(ResourceState.success(value)))
+            getWeekTrendingFilmsState.add(ResourceState.success(value)))
         .catchError((error) =>
-            getWeekTrendingFilmsResponseState.add(ResourceState.error(error)));
+            getWeekTrendingFilmsState.add(ResourceState.error(error)));
   }
 
-  fetchTopRatedFilms() {
-    getTopRatedFilmsResponseState.add(ResourceState.loading());
+  fetchUpcomingFilms() {
+    getUpcomingFilmsState.add(ResourceState.loading());
 
     _filmsRepository
-        .getTopRatedFilms()
-        .then((value) =>
-            getTopRatedFilmsResponseState.add(ResourceState.success(value)))
-        .catchError((error) =>
-            getTopRatedFilmsResponseState.add(ResourceState.error(error)));
+        .getUpcomingFilms()
+        .then(
+            (value) => getUpcomingFilmsState.add(ResourceState.success(value)))
+        .catchError(
+            (error) => getUpcomingFilmsState.add(ResourceState.error(error)));
   }
 
   fetchFilmsByTitle(String title) {
@@ -99,12 +97,6 @@ class FilmsViewModel extends BaseViewModel {
         .getFilmDetails(id)
         .then((value) => getFilmDetailState.add(ResourceState.success(value)))
         .catchError((error) => getFilmsState.add(ResourceState.error(error)));
-  }
-
-  fetchHomeFilms() {
-    fetchTopRatedFilms();
-    fetchUpcomingFilms();
-    fetchWeekTrendingFilms();
   }
 
   @override

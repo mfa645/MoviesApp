@@ -23,18 +23,21 @@ class _UpcomingFilmsHorizontalListState
     return Material(
         child: Column(
       children: [
-        SizedBox(
-            height: 250,
-            child: ScrollSnapList(
-              itemBuilder: _buildListItem,
-              itemCount: 10,
-              itemSize: 380,
-              onItemFocus: (index) {
-                upcomingIndex = index;
-                setState(() {});
-              },
-              dynamicItemSize: true,
-            )),
+        if (widget.films.isNotEmpty)
+          SizedBox(
+              height: 250,
+              child: ScrollSnapList(
+                itemBuilder: _buildListItem,
+                itemCount: 10,
+                itemSize: 380,
+                onItemFocus: (index) {
+                  upcomingIndex = index;
+                  setState(() {});
+                },
+                dynamicItemSize: true,
+              ))
+        else
+          const Text("No upcoming films availables yet"),
         const SizedBox(
           height: 10,
         ),
