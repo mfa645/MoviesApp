@@ -25,8 +25,8 @@ class FilmsDataImpl extends FilmsRepository {
   }
 
   @override
-  Future<FilmResponse> getFilms() {
-    return _remoteImpl.getFilms();
+  Future<FilmResponse> getFilms(int? selectedGenre) {
+    return _remoteImpl.getFilms(selectedGenre);
   }
 
   @override

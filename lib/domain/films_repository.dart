@@ -2,7 +2,7 @@ import 'package:movies_app/model/film.dart';
 import 'package:movies_app/model/genre.dart';
 
 abstract class FilmsRepository {
-  Future<FilmResponse> getFilms();
+  Future<FilmResponse> getFilms(int? selectedGenre);
 
   Future<FilmResponse> getWeekTrendingFilms();
 

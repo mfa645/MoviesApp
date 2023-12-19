@@ -52,20 +52,32 @@ class FilmListRow extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "Vote average : ${film.voteAverage}",
-                          style: const TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
+                        Row(children: [
+                          const Icon(
+                            Icons.star,
+                            size: 16,
                           ),
-                        ),
-                        Text(
-                          "Release date : ${film.releaseDate.year}",
-                          style: const TextStyle(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            "Vote average : ${film.voteAverage}",
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                        ]),
+                        Row(children: [
+                          const Icon(
+                            Icons.calendar_month,
+                            size: 16,
+                          ),
+                          Text(
+                            "Release date : ${film.releaseDate.isEmpty ? "NA" : DateTime.parse(film.releaseDate).year}",
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ]),
                       ],
                     ),
                   )

@@ -39,7 +39,7 @@ class Film {
   String overview;
   double popularity;
   String? posterPath;
-  DateTime releaseDate;
+  String releaseDate;
   int? runtime;
   String? status;
   String? tagline;
@@ -80,7 +80,7 @@ class Film {
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
         posterPath: json["poster_path"],
-        releaseDate: DateTime.parse(json["release_date"]),
+        releaseDate: json["release_date"],
         runtime: json["runtime"],
         status: json["status"],
         tagline: json["tagline"],
@@ -102,8 +102,7 @@ class Film {
         "overview": overview,
         "popularity": popularity,
         "poster_path": posterPath,
-        "release_date":
-            "${releaseDate.year.toString().padLeft(4, '0')}-${releaseDate.month.toString().padLeft(2, '0')}-${releaseDate.day.toString().padLeft(2, '0')}",
+        "release_date": releaseDate,
         "runtime": runtime,
         "status": status,
         "tagline": tagline,

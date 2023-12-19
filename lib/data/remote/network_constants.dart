@@ -8,6 +8,7 @@ class NetworkConstants {
   //Reviews
 
   static const DISCOVER_FILMS_PATH = "$BASE_URL/discover/movie";
+
   static const TOP_RATED_FILMS_PATH = "$FILMS_PATH/top_rated";
   static const WEEK_TRENDING_FILMS_PATH = "$BASE_URL/trending/movie/week";
   static const UPCOMING_FILMS_PATH = "$FILMS_PATH/upcoming";

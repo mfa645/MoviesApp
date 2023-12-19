@@ -39,11 +39,11 @@ class FilmsViewModel extends BaseViewModel {
             (error) => getFilmGenresState.add(ResourceState.error(error)));
   }
 
-  fetchFilms() {
+  fetchFilms(int? selectedGenre) {
     getFilmsState.add(ResourceState.loading());
 
     _filmsRepository
-        .getFilms()
+        .getFilms(selectedGenre)
         .then((value) => getFilmsState.add(ResourceState.success(value)))
         .catchError((error) => getFilmsState.add(ResourceState.error(error)));
   }
@@ -91,7 +91,7 @@ class FilmsViewModel extends BaseViewModel {
   }
 
   fetchFilmDetails(int id) {
-    getFilmsState.add(ResourceState.loading());
+    getFilmDetailState.add(ResourceState.loading());
 
     _filmsRepository
         .getFilmDetails(id)
@@ -103,6 +103,9 @@ class FilmsViewModel extends BaseViewModel {
   void dispose() {
     getFilmDetailState.close();
     getFilmGenresState.close();
+    getUpcomingFilmsState.close();
+    getTopRatedFilmsState.close();
+    getWeekTrendingFilmsState.close();
     getFilmsState.close();
   }
 }

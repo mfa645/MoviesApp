@@ -3,6 +3,7 @@ import 'package:movies_app/di/app_modules.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/model/genre.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
+import 'package:movies_app/presentation/utils/debouncer/text_field_debouncer.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
 import 'package:movies_app/presentation/widget/film_list_row.dart';
@@ -19,13 +20,14 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
   List<Film> _films = [];
   final _textFieldController = TextEditingController();
-  final List<Genre> _genres = [];
+  List<Genre> _genres = [];
+  int? selectedGenre;
 
   @override
   void initState() {
     super.initState();
 
-    _filmsViewModel.getWeekTrendingFilmsState.stream.listen((state) {
+    _filmsViewModel.getFilmsState.stream.listen((state) {
       switch (state.status) {
         case Status.LOADING:
           LoadingView.show(context);
@@ -39,25 +41,46 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
         case Status.ERROR:
           LoadingView.hide();
           ErrorView.show(context, state.exception!.toString(), () {
-            _filmsViewModel.fetchWeekTrendingFilms();
+            _filmsViewModel.fetchFilms(selectedGenre);
           });
           break;
       }
     });
 
-    _filmsViewModel.fetchWeekTrendingFilms();
+    _filmsViewModel.getFilmGenresState.stream.listen((state) {
+      switch (state.status) {
+        case Status.LOADING:
+          LoadingView.show(context);
+          break;
+        case Status.SUCCESS:
+          LoadingView.hide();
+          setState(() {
+            _genres = state.data!;
+          });
+          break;
+        case Status.ERROR:
+          LoadingView.hide();
+          ErrorView.show(context, state.exception!.toString(), () {
+            _filmsViewModel.fetchFilmGenres();
+          });
+          break;
+      }
+    });
+
+    _filmsViewModel.fetchFilmGenres();
+    _filmsViewModel.fetchFilms(null);
   }
 
   @override
   Widget build(BuildContext context) {
+    final debouncer =
+        TextFieldDebouncer(milliseconds: 1500, action: (String text) {});
     return Scaffold(
       appBar: AppBar(
         title: const Text("Discover"),
       ),
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 138, 31, 31).withOpacity(0.2)),
+        child: SizedBox(
           child: Column(children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -83,21 +106,77 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                       borderSide: const BorderSide(color: Colors.black54),
                     ),
                   ),
+                  onChanged: (text) {
+                    if (selectedGenre != null) {
+                      selectedGenre = null;
+                    }
+                    debouncer.run(() {
+                      text.isEmpty
+                          ? _filmsViewModel.fetchFilms(selectedGenre)
+                          : _filmsViewModel.fetchFilmsByTitle(text);
+                    });
+                  },
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _films.length,
-                itemBuilder: (_, index) {
-                  final film = _films[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FilmListRow(film: film),
-                  );
-                },
-              ),
-            ),
+            selectedGenre == null && _textFieldController.text.isEmpty
+                ? Expanded(
+                    child: ListView.builder(
+                      itemCount: _genres.length,
+                      itemBuilder: (_, index) {
+                        final genre = _genres[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                              onTap: () {
+                                selectedGenre = genre.id;
+                                _filmsViewModel.fetchFilms(genre.id);
+                              },
+                              child: Text(genre.name)),
+                        );
+                      },
+                    ),
+                  )
+                : _films.isNotEmpty
+                    ? Expanded(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                mainAxisAlignment: selectedGenre != null
+                                    ? MainAxisAlignment.spaceBetween
+                                    : MainAxisAlignment.end,
+                                children: [
+                                  if (selectedGenre != null)
+                                    Text("Genre : $selectedGenre"),
+                                  GestureDetector(
+                                      onTap: () {
+                                        selectedGenre != null
+                                            ? selectedGenre = null
+                                            : _textFieldController.text = "";
+                                        setState(() {});
+                                      },
+                                      child: const Text("Go back"))
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: _films.length,
+                                itemBuilder: (_, index) {
+                                  final film = _films[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: FilmListRow(film: film),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const Text("No films availables for your search"),
           ]),
         ),
       ),

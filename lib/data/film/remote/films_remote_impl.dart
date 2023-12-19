@@ -26,7 +26,7 @@ class FilmsRemoteImpl {
     }
   }
 
-  Future<FilmResponse> getFilms() async {
+  Future<FilmResponse> getFilms(int? selectedGenre) async {
     return getRequestResponseFilms(NetworkConstants.DISCOVER_FILMS_PATH);
   }
 
