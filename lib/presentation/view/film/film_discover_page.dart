@@ -55,32 +55,51 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
         title: const Text("Discover"),
       ),
       body: SafeArea(
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _textFieldController,
-              decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: "Search films here!",
-                  border: OutlineInputBorder(
+        child: Container(
+          decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 138, 31, 31).withOpacity(0.2)),
+          child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 50,
+                child: TextField(
+                  cursorColor: Colors.black54,
+                  controller: _textFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    label: const Text("Search films here!"),
+                    labelStyle: const TextStyle(
+                      letterSpacing: 0.2,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(color: Colors.black54))),
+                      borderSide: const BorderSide(color: Colors.black54),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(color: Colors.black54),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _films.length,
-              itemBuilder: (_, index) {
-                final film = _films[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FilmListRow(film: film),
-                );
-              },
+            Expanded(
+              child: ListView.builder(
+                itemCount: _films.length,
+                itemBuilder: (_, index) {
+                  final film = _films[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FilmListRow(film: film),
+                  );
+                },
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
