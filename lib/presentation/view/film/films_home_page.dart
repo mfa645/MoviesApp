@@ -4,9 +4,9 @@ import 'package:movies_app/model/film.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
-import 'package:movies_app/presentation/widget/film_horizontal_list.dart';
+import 'package:movies_app/presentation/widget/film/film_horizontal_list.dart';
+import 'package:movies_app/presentation/widget/film/upcoming_films_horizontal_list.dart';
 import 'package:movies_app/presentation/widget/loading/loading_view.dart';
-import 'package:movies_app/presentation/widget/upcoming_films_horizontal_list.dart';
 
 class FilmsHomePage extends StatefulWidget {
   const FilmsHomePage({super.key});
@@ -90,27 +90,26 @@ class _FilmsHomePageState extends State<FilmsHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Films"),
-      ),
-      body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingFilmsHorizontalList(films: _upcomingFilms),
-            FilmHorizontalList(
-              title: "WEEK TRENDS",
-              films: _weekTrendingFilms,
+    return SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                UpcomingFilmsHorizontalList(films: _upcomingFilms),
+                FilmHorizontalList(
+                  title: "WEEK TRENDS",
+                  films: _weekTrendingFilms,
+                ),
+                FilmHorizontalList(
+                  title: "TOP RATED",
+                  films: _topRatedFilms,
+                ),
+              ],
             ),
-            FilmHorizontalList(
-              title: "TOP RATED",
-              films: _topRatedFilms,
-            ),
-          ],
-        ),
-      )),
-    );
+          ),
+        ));
   }
 }

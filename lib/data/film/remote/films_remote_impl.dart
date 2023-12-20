@@ -27,7 +27,19 @@ class FilmsRemoteImpl {
   }
 
   Future<FilmResponse> getFilms(int? selectedGenre) async {
-    return getRequestResponseFilms(NetworkConstants.DISCOVER_FILMS_PATH);
+    final Map<String, dynamic> searchQueryParams = {
+      "with_genres": selectedGenre
+    };
+    searchQueryParams.addAll(apiKey);
+    try {
+      final response = await _networkClient.dio.get(
+          NetworkConstants.DISCOVER_FILMS_PATH,
+          queryParameters: searchQueryParams);
+      final filmsResponse = FilmResponse.fromJson(response.data);
+      return filmsResponse;
+    } catch (e) {
+      throw RemoteErrorMapper.getException(e);
+    }
   }
 
   Future<FilmResponse> getWeekTrendingFilms() async {

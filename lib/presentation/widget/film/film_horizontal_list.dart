@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/model/film.dart';
-import 'package:movies_app/presentation/widget/film_list_column.dart';
+import 'package:movies_app/presentation/widget/film/film_list_column.dart';
 
 class FilmHorizontalList extends StatelessWidget {
   final List<Film> films;
@@ -19,7 +19,10 @@ class FilmHorizontalList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Text(
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueAccent),
           ),
         ),
         if (films.isNotEmpty)

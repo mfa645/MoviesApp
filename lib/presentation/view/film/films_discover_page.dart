@@ -5,8 +5,10 @@ import 'package:movies_app/model/genre.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
 import 'package:movies_app/presentation/utils/debouncer/text_field_debouncer.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
+import 'package:movies_app/presentation/widget/custom_searchbar.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
-import 'package:movies_app/presentation/widget/film_list_row.dart';
+import 'package:movies_app/presentation/widget/film/film_list_row.dart';
+import 'package:movies_app/presentation/widget/genre/genre_list_row.dart';
 import 'package:movies_app/presentation/widget/loading/loading_view.dart';
 
 class FilmsDiscoverPage extends StatefulWidget {
@@ -21,7 +23,7 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
   List<Film> _films = [];
   final _textFieldController = TextEditingController();
   List<Genre> _genres = [];
-  int? selectedGenre;
+  String? selectedGenre;
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
         case Status.ERROR:
           LoadingView.hide();
           ErrorView.show(context, state.exception!.toString(), () {
-            _filmsViewModel.fetchFilms(selectedGenre);
+            _filmsViewModel.fetchFilms(null);
           });
           break;
       }
@@ -68,73 +70,64 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
     });
 
     _filmsViewModel.fetchFilmGenres();
-    _filmsViewModel.fetchFilms(null);
   }
 
   @override
   Widget build(BuildContext context) {
-    final debouncer =
-        TextFieldDebouncer(milliseconds: 1500, action: (String text) {});
+    final debouncer = TextFieldDebouncer(milliseconds: 1500, action: () {});
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: const Text("Discover"),
+        centerTitle: true,
       ),
       body: SafeArea(
+        bottom: false,
         child: SizedBox(
           child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 50,
-                child: TextField(
-                  cursorColor: Colors.black54,
-                  controller: _textFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
-                    label: const Text("Search films here!"),
-                    labelStyle: const TextStyle(
-                      letterSpacing: 0.2,
-                      color: Colors.black54,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(color: Colors.black54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(color: Colors.black54),
-                    ),
-                  ),
-                  onChanged: (text) {
-                    if (selectedGenre != null) {
-                      selectedGenre = null;
-                    }
-                    debouncer.run(() {
-                      text.isEmpty
-                          ? _filmsViewModel.fetchFilms(selectedGenre)
-                          : _filmsViewModel.fetchFilmsByTitle(text);
-                    });
-                  },
-                ),
-              ),
-            ),
+            CustomSearchbar(
+                controller: _textFieldController,
+                label: "Search films here!",
+                onChangedFunction: (String text) {
+                  if (selectedGenre != null) {
+                    selectedGenre = null;
+                  }
+                  debouncer.run(() {
+                    text.isEmpty
+                        ? _filmsViewModel.fetchFilms(null)
+                        : _filmsViewModel.fetchFilmsByTitle(text);
+                  });
+                }),
             selectedGenre == null && _textFieldController.text.isEmpty
                 ? Expanded(
-                    child: ListView.builder(
-                      itemCount: _genres.length,
-                      itemBuilder: (_, index) {
-                        final genre = _genres[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                              onTap: () {
-                                selectedGenre = genre.id;
-                                _filmsViewModel.fetchFilms(genre.id);
-                              },
-                              child: Text(genre.name)),
-                        );
-                      },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: GridView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: _genres.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 0,
+                                  mainAxisSpacing: 0,
+                                ),
+                                itemBuilder: (_, index) {
+                                  final genre = _genres[index];
+                                  return GestureDetector(
+                                      onTap: () {
+                                        selectedGenre = genre.name;
+                                        _filmsViewModel.fetchFilms(genre.id);
+                                      },
+                                      child: GenreListRow(genre: genre));
+                                }),
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 : _films.isNotEmpty
@@ -148,16 +141,35 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                                     ? MainAxisAlignment.spaceBetween
                                     : MainAxisAlignment.end,
                                 children: [
+                                  InkWell(
+                                    onTap: () {
+                                      selectedGenre != null
+                                          ? selectedGenre = null
+                                          : _textFieldController.text = "";
+                                      setState(() {});
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back,
+                                          size: 25,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   if (selectedGenre != null)
-                                    Text("Genre : $selectedGenre"),
-                                  GestureDetector(
-                                      onTap: () {
-                                        selectedGenre != null
-                                            ? selectedGenre = null
-                                            : _textFieldController.text = "";
-                                        setState(() {});
-                                      },
-                                      child: const Text("Go back"))
+                                    Text(
+                                      "$selectedGenre",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  const SizedBox(
+                                    width: 30,
+                                  ),
                                 ],
                               ),
                             ),

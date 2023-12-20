@@ -36,6 +36,7 @@ class Film {
   int id;
   String originalLanguage;
   String originalTitle;
+  List<ProductionCompany>? productionCompanies;
   String overview;
   double popularity;
   String? posterPath;
@@ -45,7 +46,6 @@ class Film {
   String? tagline;
   String title;
   double voteAverage;
-  int voteCount;
 
   Film({
     required this.adult,
@@ -55,6 +55,7 @@ class Film {
     required this.id,
     required this.originalLanguage,
     required this.originalTitle,
+    required this.productionCompanies,
     required this.overview,
     required this.popularity,
     required this.releaseDate,
@@ -64,7 +65,6 @@ class Film {
     required this.tagline,
     required this.title,
     required this.voteAverage,
-    required this.voteCount,
   });
 
   factory Film.fromMap(Map<String, dynamic> json) => Film(
@@ -73,6 +73,10 @@ class Film {
         budget: json["budget"],
         genres: json["genres"] != null
             ? List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x)))
+            : null,
+        productionCompanies: json["production_companies"] != null
+            ? List<ProductionCompany>.from(json["production_companies"]
+                .map((x) => ProductionCompany.fromJson(x)))
             : null,
         id: json["id"],
         originalLanguage: json["original_language"],
@@ -86,7 +90,6 @@ class Film {
         tagline: json["tagline"],
         title: json["title"],
         voteAverage: json["vote_average"] + 0.0,
-        voteCount: json["vote_count"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -95,6 +98,9 @@ class Film {
         "budget": budget,
         "genres": genres != null
             ? List<dynamic>.from(genres!.map((x) => x.toJson()))
+            : null,
+        "production_companies": productionCompanies != null
+            ? List<dynamic>.from(productionCompanies!.map((x) => x.toJson()))
             : null,
         "id": id,
         "original_language": originalLanguage,
@@ -108,6 +114,34 @@ class Film {
         "tagline": tagline,
         "title": title,
         "vote_average": voteAverage,
-        "vote_count": voteCount,
+      };
+}
+
+class ProductionCompany {
+  int id;
+  String? logoPath;
+  String name;
+  String originCountry;
+
+  ProductionCompany({
+    required this.id,
+    required this.logoPath,
+    required this.name,
+    required this.originCountry,
+  });
+
+  factory ProductionCompany.fromJson(Map<String, dynamic> json) =>
+      ProductionCompany(
+        id: json["id"],
+        logoPath: json["logo_path"],
+        name: json["name"],
+        originCountry: json["origin_country"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "logo_path": logoPath,
+        "name": name,
+        "origin_country": originCountry,
       };
 }
