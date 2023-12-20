@@ -12,8 +12,10 @@ class NavigationRoutes {
   static const DISCOVER_ROUTE = "/discover";
   static const FAVOURITES_ROUTE = "/favourites";
   static const FILM_HOME_DETAIL_ROUTE = "$HOME_ROUTE/$_FILM_DETAIL_PATH";
-  static const FILM_DISCOVER_DETAIL_ROUTE = "$HOME_ROUTE/$_FILM_DETAIL_PATH2";
-  static const FILM_FAVOURITES_DETAIL_ROUTE = "$HOME_ROUTE/$_FILM_DETAIL_PATH3";
+  static const FILM_DISCOVER_DETAIL_ROUTE =
+      "$DISCOVER_ROUTE/$_FILM_DETAIL_PATH2";
+  static const FILM_FAVOURITES_DETAIL_ROUTE =
+      "$FAVOURITES_ROUTE/$_FILM_DETAIL_PATH3";
 
   static const _FILM_DETAIL_PATH = "detail";
   static const _FILM_DETAIL_PATH2 = "detail2";

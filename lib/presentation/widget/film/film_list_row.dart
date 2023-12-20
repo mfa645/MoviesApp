@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movies_app/data/remote/network_constants.dart';
 import 'package:movies_app/model/film.dart';
+import 'package:movies_app/presentation/navigation/navigation_routes.dart';
 
 class FilmListRow extends StatelessWidget {
   final Film film;
@@ -12,7 +14,7 @@ class FilmListRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //context.go(NavigationRoutes.DETAIL, extra: pokemonNetworkListItem.name);
+        context.go(NavigationRoutes.FILM_DISCOVER_DETAIL_ROUTE, extra: film.id);
       },
       child: Center(
         child: SizedBox(
@@ -32,6 +34,12 @@ class FilmListRow extends StatelessWidget {
                               imageUrl: NetworkConstants.IMAGES_PATH +
                                   film.posterPath!,
                               fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      CircularProgressIndicator(
+                                color: Colors.blueAccent,
+                                value: downloadProgress.progress,
+                              ),
                             )
                           : Image.asset("assets/images/default_movie.png"),
                     ),

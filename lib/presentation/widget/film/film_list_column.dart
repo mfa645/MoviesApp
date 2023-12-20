@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movies_app/data/remote/network_constants.dart';
 import 'package:movies_app/model/film.dart';
+import 'package:movies_app/presentation/navigation/navigation_routes.dart';
 
 class FilmListColumn extends StatelessWidget {
   final Film film;
@@ -12,7 +14,7 @@ class FilmListColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //context.go(NavigationRoutes.DETAIL, extra: pokemonNetworkListItem.name);
+        context.go(NavigationRoutes.FILM_HOME_DETAIL_ROUTE, extra: film.id);
       },
       child: Center(
         child: SizedBox(

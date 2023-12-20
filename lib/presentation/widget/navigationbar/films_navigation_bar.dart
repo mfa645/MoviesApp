@@ -24,13 +24,10 @@ class _FilmsNavigationBarState extends State<FilmsNavigationBar> {
             initialLocation: value == widget.navigationShell.currentIndex);
       },
       destinations: const [
+        NavigationDestination(icon: Icon(Icons.movie_outlined), label: "Home"),
         NavigationDestination(
-            icon: Icon(Icons.movie_outlined),
-            selectedIcon: Icon(Icons.movie),
-            label: "Home"),
-        NavigationDestination(
-            icon: Icon(Icons.search_off_outlined),
-            selectedIcon: Icon(Icons.search_off),
+            icon: Icon(Icons.search),
+            selectedIcon: Icon(Icons.search),
             label: "Discover"),
         NavigationDestination(
             icon: Icon(Icons.favorite_outline),

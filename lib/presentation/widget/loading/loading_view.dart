@@ -18,7 +18,9 @@ class LoadingView {
               child: Card(
                 child: Padding(
                   padding: EdgeInsets.all(20),
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: Colors.blueAccent,
+                  ),
                 ),
               ),
             ),

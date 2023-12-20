@@ -67,53 +67,63 @@ class Film {
     required this.voteAverage,
   });
 
-  factory Film.fromMap(Map<String, dynamic> json) => Film(
-        adult: json["adult"] ? null : json["adult"],
-        backdropPath: json["backdrop_path"],
-        budget: json["budget"],
-        genres: json["genres"] != null
-            ? List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x)))
+  factory Film.fromMap(Map<String, dynamic> filmJson) => Film(
+        adult: filmJson["adult"] is int
+            ? filmJson["adult"] == 1
+                ? true
+                : false
+            : filmJson["adult"],
+        backdropPath: filmJson["backdrop_path"],
+        budget: filmJson["budget"],
+        genres: filmJson["genres"] != null
+            ? List<Genre>.from(
+                (filmJson["genres"]).map((x) => Genre.fromJson(x)))
             : null,
-        productionCompanies: json["production_companies"] != null
-            ? List<ProductionCompany>.from(json["production_companies"]
+        productionCompanies: filmJson["production_companies"] != null
+            ? List<ProductionCompany>.from(filmJson["production_companies"]
                 .map((x) => ProductionCompany.fromJson(x)))
             : null,
-        id: json["id"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"],
-        popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
-        releaseDate: json["release_date"],
-        runtime: json["runtime"],
-        status: json["status"],
-        tagline: json["tagline"],
-        title: json["title"],
-        voteAverage: json["vote_average"] + 0.0,
+        id: filmJson["id"],
+        originalLanguage: filmJson["original_language"],
+        originalTitle: filmJson["original_title"],
+        overview: filmJson["overview"],
+        popularity: filmJson["popularity"]?.toDouble(),
+        posterPath: filmJson["poster_path"],
+        releaseDate: filmJson["release_date"],
+        runtime: filmJson["runtime"],
+        status: filmJson["status"],
+        tagline: filmJson["tagline"],
+        title: filmJson["title"],
+        voteAverage: filmJson["vote_average"] + 0.0,
       );
 
   Map<String, dynamic> toMap() => {
-        "adult": adult ?? false,
-        "backdrop_path": backdropPath,
+        "adult": adult == null
+            ? adult!
+                ? 1
+                : 0
+            : null,
+        "backdropPath": backdropPath,
         "budget": budget,
         "genres": genres != null
-            ? List<dynamic>.from(genres!.map((x) => x.toJson()))
+            ? List<dynamic>.from(genres!.map((x) => x.toJson())).toString()
             : null,
-        "production_companies": productionCompanies != null
+        "productionCompanies": productionCompanies != null
             ? List<dynamic>.from(productionCompanies!.map((x) => x.toJson()))
+                .toString()
             : null,
         "id": id,
-        "original_language": originalLanguage,
-        "original_title": originalTitle,
+        "originalLanguage": originalLanguage,
+        "originalTitle": originalTitle,
         "overview": overview,
         "popularity": popularity,
-        "poster_path": posterPath,
-        "release_date": releaseDate,
+        "posterPath": posterPath,
+        "releaseDate": releaseDate,
         "runtime": runtime,
         "status": status,
         "tagline": tagline,
         "title": title,
-        "vote_average": voteAverage,
+        "voteAverage": voteAverage,
       };
 }
 

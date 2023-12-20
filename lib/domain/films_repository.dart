@@ -15,4 +15,10 @@ abstract class FilmsRepository {
   Future<Film> getFilmDetails(int filmId);
 
   Future<List<Genre>> getFilmGenres();
+
+  Future addFilmToFavourites(Film film);
+  Future removeFilmFromFavourites(int filmId);
+  Future<List<Film>> getFavouriteFilms();
+
+  Future<bool> getIsFavouriteFilm(int filmId);
 }

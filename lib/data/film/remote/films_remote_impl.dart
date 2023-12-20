@@ -73,8 +73,8 @@ class FilmsRemoteImpl {
       final response = await _networkClient.dio.get(
           "${NetworkConstants.FILMS_PATH}/$filmId",
           queryParameters: apiKey);
-
-      return Film.fromMap(response.data);
+      final film = Film.fromMap(response.data);
+      return film;
     } catch (e) {
       throw RemoteErrorMapper.getException(e);
     }

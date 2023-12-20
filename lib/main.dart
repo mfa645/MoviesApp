@@ -19,6 +19,10 @@ class MainApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     return MaterialApp.router(
+      theme: ThemeData(
+          textSelectionTheme: const TextSelectionThemeData(
+              selectionColor: Colors.blueAccent,
+              selectionHandleColor: Colors.blueAccent)),
       debugShowCheckedModeBanner: false,
       routerConfig: router,
     );

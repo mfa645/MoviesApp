@@ -77,27 +77,49 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
     final debouncer = TextFieldDebouncer(milliseconds: 1500, action: () {});
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: const Text("Discover"),
-        centerTitle: true,
-      ),
       body: SafeArea(
         bottom: false,
         child: SizedBox(
-          child: Column(children: [
-            CustomSearchbar(
-                controller: _textFieldController,
-                label: "Search films here!",
-                onChangedFunction: (String text) {
-                  if (selectedGenre != null) {
-                    selectedGenre = null;
-                  }
-                  debouncer.run(() {
-                    text.isEmpty
-                        ? _filmsViewModel.fetchFilms(null)
-                        : _filmsViewModel.fetchFilmsByTitle(text);
-                  });
-                }),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(
+              height: 30,
+            ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Discover",
+                        style: TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.bold)),
+                  ),
+                  Icon(
+                    Icons.movie,
+                    size: 40,
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: CustomSearchbar(
+                  controller: _textFieldController,
+                  label: "Search films here!",
+                  onChangedFunction: (String text) {
+                    if (selectedGenre != null) {
+                      selectedGenre = null;
+                    }
+                    debouncer.run(() {
+                      text.isEmpty
+                          ? _filmsViewModel.fetchFilms(null)
+                          : _filmsViewModel.fetchFilmsByTitle(text);
+                    });
+                  }),
+            ),
             selectedGenre == null && _textFieldController.text.isEmpty
                 ? Expanded(
                     child: Padding(
@@ -139,7 +161,7 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                               child: Row(
                                 mainAxisAlignment: selectedGenre != null
                                     ? MainAxisAlignment.spaceBetween
-                                    : MainAxisAlignment.end,
+                                    : MainAxisAlignment.start,
                                 children: [
                                   InkWell(
                                     onTap: () {
@@ -150,7 +172,7 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                                     },
                                     child: const Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.start,
                                       children: [
                                         Icon(
                                           Icons.arrow_back,

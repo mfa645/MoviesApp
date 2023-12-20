@@ -20,20 +20,29 @@ class CustomSearchbar extends StatelessWidget {
           cursorColor: Colors.black54,
           controller: controller,
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.search),
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Colors.blueAccent,
+            ),
             label: Text(label),
             labelStyle: const TextStyle(
               letterSpacing: 0.2,
-              color: Colors.black54,
+              color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide:
+                  const BorderSide(color: Colors.blueAccent, width: 1.5),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(color: Colors.black54),
+              borderSide: const BorderSide(color: Colors.blueAccent),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(color: Colors.black54),
+              borderSide:
+                  const BorderSide(color: Colors.blueAccent, width: 2.5),
             ),
           ),
           onChanged: (text) {

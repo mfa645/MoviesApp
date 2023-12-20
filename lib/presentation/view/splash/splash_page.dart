@@ -24,13 +24,16 @@ class _SplashPageState extends State<SplashPage> {
       body: Expanded(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Lottie.asset("assets/lottie/splash_animation.json",
                   repeat: true, animate: true),
               const Text(
                 "Movies app",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30),
               ),
             ],
           ),

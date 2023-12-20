@@ -6,13 +6,12 @@ import 'package:movies_app/model/genre.dart';
 
 class FilmsDataImpl extends FilmsRepository {
   final FilmsRemoteImpl _remoteImpl;
-  // ignore: unused_field
-  final FilmsLocalImpl _filmsLocalImpl;
+  final FilmsLocalImpl _localImpl;
 
   FilmsDataImpl(
       {required FilmsRemoteImpl remoteImpl, required FilmsLocalImpl localImpl})
       : _remoteImpl = remoteImpl,
-        _filmsLocalImpl = localImpl;
+        _localImpl = localImpl;
 
   @override
   Future<Film> getFilmDetails(int filmId) {
@@ -47,5 +46,25 @@ class FilmsDataImpl extends FilmsRepository {
   @override
   Future<FilmResponse> getWeekTrendingFilms() {
     return _remoteImpl.getWeekTrendingFilms();
+  }
+
+  @override
+  Future addFilmToFavourites(Film film) {
+    return _localImpl.addFilmToFavourites(film);
+  }
+
+  @override
+  Future<List<Film>> getFavouriteFilms() {
+    return _localImpl.getFavouriteFilms();
+  }
+
+  @override
+  Future removeFilmFromFavourites(int filmId) {
+    return _localImpl.removeFilmFromFavourites(filmId);
+  }
+
+  @override
+  Future<bool> getIsFavouriteFilm(int filmId) {
+    return _localImpl.getIsFavouriteFilm(filmId);
   }
 }

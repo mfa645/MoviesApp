@@ -19,6 +19,11 @@ class FilmsViewModel extends BaseViewModel {
 
   final StreamController<FilmResponseState> getFilmsState = StreamController();
 
+  final StreamController<bool> getIsFavouriteFilm = StreamController();
+
+  final StreamController<ResourceState<List<Film>>> getFavouriteFilms =
+      StreamController();
+
   final StreamController<FilmResponseState> getUpcomingFilmsState =
       StreamController();
   final StreamController<FilmResponseState> getTopRatedFilmsState =
@@ -57,6 +62,30 @@ class FilmsViewModel extends BaseViewModel {
             (value) => getTopRatedFilmsState.add(ResourceState.success(value)))
         .catchError(
             (error) => getTopRatedFilmsState.add(ResourceState.error(error)));
+  }
+
+  fetchFavouriteFilms() {
+    getFavouriteFilms.add(ResourceState.loading());
+
+    _filmsRepository
+        .getFavouriteFilms()
+        .then((value) => getFavouriteFilms.add(ResourceState.success(value)))
+        .catchError(
+            (error) => getFavouriteFilms.add(ResourceState.error(error)));
+  }
+
+  removeFilmFromFavourites(int id) {
+    _filmsRepository.removeFilmFromFavourites(id);
+  }
+
+  addFilmToFavourites(Film film) {
+    _filmsRepository.addFilmToFavourites(film);
+  }
+
+  fetchIsFavouriteFilm(int filmId) {
+    _filmsRepository
+        .getIsFavouriteFilm(filmId)
+        .then((value) => getIsFavouriteFilm.add(value));
   }
 
   fetchWeekTrendingFilms() {
