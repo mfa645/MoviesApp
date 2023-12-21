@@ -18,6 +18,11 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 70, 69, 69),

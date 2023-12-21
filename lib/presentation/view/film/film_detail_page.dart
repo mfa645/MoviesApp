@@ -24,6 +24,12 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
   bool _isFavourite = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    _filmsViewModel.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 

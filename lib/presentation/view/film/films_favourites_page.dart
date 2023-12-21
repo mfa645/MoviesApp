@@ -15,8 +15,7 @@ class FilmFavouritesPage extends StatefulWidget {
   State<FilmFavouritesPage> createState() => _FilmFavouritesPageState();
 }
 
-class _FilmFavouritesPageState extends State<FilmFavouritesPage>
-    with WidgetsBindingObserver {
+class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
 
   List<Film> _films = [];
@@ -45,26 +44,12 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage>
       }
     });
     _filmsViewModel.fetchFavouriteFilms();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    // These are the callbacks
-    switch (state) {
-      default:
-        _filmsViewModel.fetchFavouriteFilms();
-    }
   }
 
   @override
   void dispose() {
-    // Remove the observer
-    WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
+    _filmsViewModel.dispose();
   }
 
   @override

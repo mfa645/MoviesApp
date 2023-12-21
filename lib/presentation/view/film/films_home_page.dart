@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/di/app_modules.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
+import 'package:movies_app/presentation/navigation/navigation_routes.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
 import 'package:movies_app/presentation/widget/film/film_horizontal_list.dart';
@@ -20,6 +21,12 @@ class _FilmsHomePageState extends State<FilmsHomePage> {
   List<Film> _upcomingFilms = [];
   List<Film> _topRatedFilms = [];
   List<Film> _weekTrendingFilms = [];
+
+  @override
+  void dispose() {
+    super.dispose();
+    _filmsViewModel.dispose();
+  }
 
   @override
   void initState() {
@@ -98,7 +105,10 @@ class _FilmsHomePageState extends State<FilmsHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UpcomingFilmsHorizontalList(films: _upcomingFilms),
+                UpcomingFilmsHorizontalList(
+                  films: _upcomingFilms,
+                  route: NavigationRoutes.FILM_HOME_DETAIL_ROUTE,
+                ),
                 FilmHorizontalList(
                   title: "WEEK TRENDS",
                   films: _weekTrendingFilms,

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movies_app/data/remote/network_constants.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
@@ -7,8 +8,10 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class UpcomingFilmsHorizontalList extends StatefulWidget {
   final List<Film> films;
+  final String route;
 
-  const UpcomingFilmsHorizontalList({super.key, required this.films});
+  const UpcomingFilmsHorizontalList(
+      {super.key, required this.films, required this.route});
 
   @override
   State<UpcomingFilmsHorizontalList> createState() =>
@@ -57,59 +60,64 @@ class _UpcomingFilmsHorizontalListState
 
   Widget _buildListItem(BuildContext context, int index) {
     Film film = widget.films[index];
-    return SizedBox(
-      width: 380,
-      child: Card(
-        color: Colors.transparent,
-        elevation: 12,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: SizedBox(
-                  height: 242,
-                  child: film.backdropPath != null
-                      ? CachedNetworkImage(
-                          imageUrl:
-                              NetworkConstants.IMAGES_PATH + film.backdropPath!,
-                          fit: BoxFit.fitHeight,
-                        )
-                      : Image.asset("assets/images/default_movie.png"),
+    return GestureDetector(
+      onTap: () {
+        context.go(widget.route, extra: film.id);
+      },
+      child: SizedBox(
+        width: 380,
+        child: Card(
+          color: Colors.transparent,
+          elevation: 12,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: SizedBox(
+                    height: 242,
+                    child: film.backdropPath != null
+                        ? CachedNetworkImage(
+                            imageUrl: NetworkConstants.IMAGES_PATH +
+                                film.backdropPath!,
+                            fit: BoxFit.fitHeight,
+                          )
+                        : Image.asset("assets/images/default_movie.png"),
+                  ),
                 ),
-              ),
-              Container(
-                width: 380,
-                height: double.infinity,
-                decoration:
-                    BoxDecoration(color: Colors.black.withOpacity(0.30)),
-              ),
-              Positioned(
-                bottom: 10,
-                left: 10,
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 200,
-                        child: Text(
-                          film.title,
-                          softWrap: true,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
+                Container(
+                  width: 380,
+                  height: double.infinity,
+                  decoration:
+                      BoxDecoration(color: Colors.black.withOpacity(0.30)),
+                ),
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 200,
+                          child: Text(
+                            film.title,
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
