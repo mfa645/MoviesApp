@@ -168,7 +168,7 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                     debouncer.run(() {
                       _page = 1;
                       text.isEmpty
-                          ? _filmsViewModel.fetchFilms(null, 1)
+                          ? setState(() {})
                           : _filmsViewModel.fetchFilmsByTitle(text, 1);
                       setState(() {});
                     });
