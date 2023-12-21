@@ -53,17 +53,20 @@ final GoRouter router =
               builder: (context, state) => const FilmsDiscoverPage(),
               routes: [
                 GoRoute(
-                  path: NavigationRoutes._FILM_DETAIL_PATH2,
-                  builder: (context, state) => FilmDetailPage(
-                    filmId: state.extra as int,
-                  ),
-                )
+                    path: NavigationRoutes._FILM_DETAIL_PATH2,
+                    builder: (context, state) {
+                      return FilmDetailPage(
+                        filmId: state.extra as int,
+                      );
+                    })
               ])
         ]),
         StatefulShellBranch(routes: [
           GoRoute(
               path: NavigationRoutes.FAVOURITES_ROUTE,
-              builder: (context, state) => const FilmFavouritesPage(),
+              builder: (context, state) {
+                return const FilmFavouritesPage();
+              },
               routes: [
                 GoRoute(
                   path: NavigationRoutes._FILM_DETAIL_PATH3,

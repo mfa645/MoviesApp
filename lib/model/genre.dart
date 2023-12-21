@@ -8,10 +8,6 @@ class GenreResponse {
   factory GenreResponse.fromJson(Map<String, dynamic> json) => GenreResponse(
         genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "genres": List<dynamic>.from(genres.map((x) => x.toJsonString())),
-      };
 }
 
 class Genre {
@@ -37,6 +33,4 @@ class Genre {
 
   Map<String, dynamic> toDBMap(int filmId) =>
       {"id": id, "name": name, "filmForeignKey": filmForeignKey};
-
-  String toJsonString() => '{"id":$id,"name":"$name"}';
 }

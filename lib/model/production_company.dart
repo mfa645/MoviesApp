@@ -37,7 +37,4 @@ class ProductionCompany {
         "originCountry": originCountry,
         "filmForeignKey": filmForeignKey
       };
-
-  String toJsonString() =>
-      '{"id":$id,${logoPath == null ? 'logo_path : null' : '"logoPath":"$logoPath"'},"name":"$name","origin_country":"$originCountry"}';
 }

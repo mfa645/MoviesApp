@@ -9,16 +9,19 @@ import 'package:movies_app/presentation/widget/film/film_list_row.dart';
 import 'package:movies_app/presentation/widget/loading/loading_view.dart';
 
 class FilmFavouritesPage extends StatefulWidget {
-  const FilmFavouritesPage({super.key});
-
+  const FilmFavouritesPage({Key? key}) : super(key: key);
   @override
   State<FilmFavouritesPage> createState() => _FilmFavouritesPageState();
 }
+
+final GlobalKey<_FilmFavouritesPageState> myStreamPageKey =
+    GlobalKey<_FilmFavouritesPageState>();
 
 class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
 
   List<Film> _films = [];
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -44,6 +47,11 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
       }
     });
     _filmsViewModel.fetchFavouriteFilms();
+  }
+
+  void resetState() {
+    _filmsViewModel.fetchFavouriteFilms();
+    setState(() {});
   }
 
   @override
@@ -85,12 +93,31 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
                 itemBuilder: (_, index) {
                   final film = _films[index];
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FilmListRow(
-                      film: film,
-                      route: NavigationRoutes.FILM_FAVOURITES_DETAIL_ROUTE,
-                    ),
-                  );
+                      padding: const EdgeInsets.all(8.0),
+                      child: Dismissible(
+                          key: Key(film.id.toString()),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            color: Colors.red,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onDismissed: (_) {
+                            _filmsViewModel.removeFilmFromFavourites(film.id);
+                          },
+                          child: FilmListRow(
+                            film: film,
+                            route:
+                                NavigationRoutes.FILM_FAVOURITES_DETAIL_ROUTE,
+                          )));
                 },
               ),
             ),

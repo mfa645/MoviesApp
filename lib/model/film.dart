@@ -132,15 +132,6 @@ class Film {
             : null,
         "backdropPath": backdropPath,
         "budget": budget,
-        /*
-        "genres": genres != null
-            ? List<dynamic>.from(genres!.map((x) => x.toJsonString()))
-                .toString()
-            : null,
-        "productionCompanies": productionCompanies != null
-            ? List<dynamic>.from(productionCompanies!.map((x) => x.toDBMap()))
-                .toString()
-            : null,*/
         "id": id,
         "originalLanguage": originalLanguage,
         "originalTitle": originalTitle,
@@ -154,44 +145,4 @@ class Film {
         "title": title,
         "voteAverage": voteAverage,
       };
-
-/*
-List<Genre>? _mapGenres(String genresData) {
-  List<Genre>? genres;
-
-  try {
-    final genresFromJsonString = json.decode(genresData);
-    if (genresData is Map<String, dynamic>) {
-      genres = List<Genre>.from(
-          (genresFromJsonString).map((x) => Genre.fromJson(x)));
-    } else {
-      // Manejar el caso en el que no se pueda convertir a Map<String, dynamic>
-    }
-  } catch (e) {
-    // Manejar cualquier excepción que ocurra durante la decodificación del JSON
-  }
-
-  return genres ?? [];
-}
-
-List<ProductionCompany>? _mapProductionCompanies(
-    String productionCompaniesData) {
-  List<ProductionCompany>? productionCompanies;
-
-  try {
-    final productionCompaniesFromJsonString =
-        json.decode(productionCompaniesData);
-    if (productionCompaniesData is Map<String, dynamic>) {
-      productionCompanies = List<ProductionCompany>.from(
-          (productionCompaniesFromJsonString)
-              .map((x) => ProductionCompany.fromJson(x)));
-    } else {
-      // Manejar el caso en el que no se pueda convertir a Map<String, dynamic>
-    }
-  } catch (e) {
-    // Manejar cualquier excepción que ocurra durante la decodificación del JSON
-  }
-
-  return productionCompanies ?? [];
-}*/
 }
