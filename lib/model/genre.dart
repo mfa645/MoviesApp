@@ -10,23 +10,33 @@ class GenreResponse {
       );
 
   Map<String, dynamic> toJson() => {
-        "genres": List<dynamic>.from(genres.map((x) => x.toJson())),
+        "genres": List<dynamic>.from(genres.map((x) => x.toJsonString())),
       };
 }
 
 class Genre {
   int id;
   String name;
+  int? filmForeignKey;
 
   Genre({
     required this.id,
     required this.name,
+    required this.filmForeignKey,
   });
 
   factory Genre.fromJson(Map<String, dynamic> json) => Genre(
-        id: json["id"],
-        name: json["name"],
-      );
+      id: json["id"],
+      name: json["name"],
+      filmForeignKey: json["filmForeignKey"]);
 
-  String toJson() => '{"id":$id,"name":"$name"}';
+  factory Genre.fromDBMap(Map<String, dynamic> json) => Genre(
+      id: json["id"],
+      name: json["name"],
+      filmForeignKey: json["filmForeignKey"]);
+
+  Map<String, dynamic> toDBMap(int filmId) =>
+      {"id": id, "name": name, "filmForeignKey": filmForeignKey};
+
+  String toJsonString() => '{"id":$id,"name":"$name"}';
 }

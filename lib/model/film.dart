@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:movies_app/model/genre.dart';
+import 'package:movies_app/model/production_company.dart';
 
 class FilmResponse {
   int page;
@@ -79,18 +78,16 @@ class Film {
         budget: filmJson["budget"],
         genres: filmJson["genres"] == null
             ? null
-            : filmJson["genres"] is String
-                ? _mapGenres(filmJson["genres"])
-                : List<Genre>.from(
-                    filmJson["genres"].map((x) => Genre.fromJson(x))),
-        productionCompanies: filmJson["production_companies"] != null
-            ? List<ProductionCompany>.from(filmJson["production_companies"]
-                .map((x) => ProductionCompany.fromJson(x)))
-            : null,
+            : List<Genre>.from(
+                filmJson["genres"].map((x) => Genre.fromJson(x))),
         id: filmJson["id"],
         originalLanguage: filmJson["original_language"],
         originalTitle: filmJson["original_title"],
         overview: filmJson["overview"],
+        productionCompanies: filmJson["production_companies"] != null
+            ? List<ProductionCompany>.from(filmJson["production_companies"]
+                .map((x) => ProductionCompany.fromJson(x)))
+            : null,
         popularity: filmJson["popularity"]?.toDouble(),
         posterPath: filmJson["poster_path"],
         releaseDate: filmJson["release_date"],
@@ -101,6 +98,13 @@ class Film {
         voteAverage: filmJson["vote_average"] + 0.0,
       );
 
+  factory Film.convertFromDatabase(Film film, List<Genre> genres,
+      List<ProductionCompany> productionCompanies) {
+    film.genres = genres;
+    film.productionCompanies = productionCompanies;
+    return film;
+  }
+
   factory Film.fromDBMap(Map<String, dynamic> filmJson) => Film(
         adult: filmJson["adult"] is int
             ? filmJson["adult"] == 1
@@ -109,18 +113,8 @@ class Film {
             : filmJson["adult"],
         backdropPath: filmJson["backdropPath"],
         budget: filmJson["budget"],
-        genres: filmJson["genres"] == null
-            ? null
-            : filmJson["genres"] is String
-                ? _mapGenres(filmJson["genres"])
-                : List<Genre>.from(
-                    filmJson["genres"].map((x) => Genre.fromJson(x))),
-        productionCompanies: filmJson["productionCompanies"] == null
-            ? null
-            : filmJson["productionCompanies"] is String
-                ? _mapProductionCompanies(filmJson["productionCompanies"])
-                : List<ProductionCompany>.from(filmJson["productionCompanies"]
-                    .map((x) => Genre.fromJson(x))),
+        genres: null,
+        productionCompanies: null,
         id: filmJson["id"],
         originalLanguage: filmJson["originalLanguage"],
         originalTitle: filmJson["originalTitle"],
@@ -134,7 +128,6 @@ class Film {
         title: filmJson["title"],
         voteAverage: filmJson["voteAverage"] + 0.0,
       );
-
   Map<String, dynamic> toMap() => {
         "adult": adult == null
             ? adult!
@@ -143,13 +136,15 @@ class Film {
             : null,
         "backdropPath": backdropPath,
         "budget": budget,
+        /*
         "genres": genres != null
-            ? List<dynamic>.from(genres!.map((x) => x.toJson())).toString()
+            ? List<dynamic>.from(genres!.map((x) => x.toJsonString()))
+                .toString()
             : null,
         "productionCompanies": productionCompanies != null
             ? List<dynamic>.from(productionCompanies!.map((x) => x.toDBMap()))
                 .toString()
-            : null,
+            : null,*/
         "id": id,
         "originalLanguage": originalLanguage,
         "originalTitle": originalTitle,
@@ -163,8 +158,8 @@ class Film {
         "title": title,
         "voteAverage": voteAverage,
       };
-}
 
+/*
 List<Genre>? _mapGenres(String genresData) {
   List<Genre>? genres;
 
@@ -202,29 +197,5 @@ List<ProductionCompany>? _mapProductionCompanies(
   }
 
   return productionCompanies ?? [];
-}
-
-class ProductionCompany {
-  int id;
-  String? logoPath;
-  String name;
-  String originCountry;
-
-  ProductionCompany({
-    required this.id,
-    required this.logoPath,
-    required this.name,
-    required this.originCountry,
-  });
-
-  factory ProductionCompany.fromJson(Map<String, dynamic> json) =>
-      ProductionCompany(
-        id: json["id"],
-        logoPath: json["logo_path"],
-        name: json["name"],
-        originCountry: json["origin_country"],
-      );
-
-  String toDBMap() =>
-      '{"id":$id,${logoPath == null ? 'logo_path : null' : '"logoPath":"$logoPath"'},"name":"$name","origin_country":"$originCountry"}';
+}*/
 }
