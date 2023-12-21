@@ -61,6 +61,11 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
                       style:
                           TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
                   Icon(
+                    Icons.star,
+                    size: 40,
+                    color: Colors.yellowAccent,
+                  ),
+                  Icon(
                     Icons.movie,
                     size: 40,
                   ),

@@ -16,7 +16,7 @@ class FilmsLocalImpl {
 
     final films = await db.query(FilmsLocalImpl.filmsTable);
     var favouriteFilms = films.map((e) {
-      return Film.fromMap(e);
+      return Film.fromDBMap(e);
     });
 
     await closeDb();
@@ -38,7 +38,6 @@ class FilmsLocalImpl {
 
   Future addFilmToFavourites(Film film) async {
     Database db = await _getDb();
-
     await db.insert(FilmsLocalImpl.filmsTable, film.toMap());
 
     await closeDb();
