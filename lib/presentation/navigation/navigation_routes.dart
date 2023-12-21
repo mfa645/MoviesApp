@@ -62,9 +62,16 @@ final GoRouter router =
         ]),
         StatefulShellBranch(routes: [
           GoRoute(
-            path: NavigationRoutes.FAVOURITES_ROUTE,
-            builder: (context, state) => const FilmFavouritesPage(),
-          )
+              path: NavigationRoutes.FAVOURITES_ROUTE,
+              builder: (context, state) => const FilmFavouritesPage(),
+              routes: [
+                GoRoute(
+                  path: NavigationRoutes._FILM_DETAIL_PATH3,
+                  builder: (context, state) => FilmDetailPage(
+                    filmId: state.extra as int,
+                  ),
+                )
+              ])
         ])
       ])
 ]);

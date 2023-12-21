@@ -24,13 +24,13 @@ class FilmsDataImpl extends FilmsRepository {
   }
 
   @override
-  Future<FilmResponse> getFilms(int? selectedGenre) {
-    return _remoteImpl.getFilms(selectedGenre);
+  Future<FilmResponse> getFilms(int? selectedGenre, int page) {
+    return _remoteImpl.getFilms(selectedGenre, page);
   }
 
   @override
-  Future<FilmResponse> getFilmsByTitle(String title) {
-    return _remoteImpl.getFilmsByTitle(title);
+  Future<FilmResponse> getFilmsByTitle(String title, int page) {
+    return _remoteImpl.getFilmsByTitle(title, page);
   }
 
   @override

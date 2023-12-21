@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/model/genre.dart';
 import 'package:movies_app/model/production_company.dart';
@@ -21,7 +19,6 @@ class FilmsLocalImpl {
     final productionCompaniesData =
         await db.query(FilmsLocalImpl.companiesTable);
 
-    await closeDb();
     //Decode entities
     var favouriteFilms = filmsData.map((e) {
       return Film.fromDBMap(e);
@@ -32,6 +29,8 @@ class FilmsLocalImpl {
     var favouriteProductionCompanies = productionCompaniesData.map((e) {
       return ProductionCompany.fromDBMap(e);
     });
+    await closeDb();
+
     //Mix films with their genres and companies
     return favouriteFilms.map((film) {
       final filmGenres = favouriteGenres
@@ -63,8 +62,7 @@ class FilmsLocalImpl {
       where: 'filmForeignKey = ?',
       whereArgs: [filmId],
     );
-
-    await closeDb();
+    closeDb();
   }
 
   Future addFilmToFavourites(Film film) async {
@@ -81,7 +79,20 @@ class FilmsLocalImpl {
             FilmsLocalImpl.companiesTable, productionCompany.toDBMap(film.id));
       }
     }
+    closeDb();
+  }
+
+  Future<bool> getIsFavouriteFilm(int filmId) async {
+    Database db = await _getDb();
+
+    final filmsData = await db.query(FilmsLocalImpl.filmsTable);
+    var favouriteFilms = filmsData.map((e) {
+      return Film.fromDBMap(e);
+    });
+
     await closeDb();
+
+    return favouriteFilms.toList().any((element) => element.id == filmId);
   }
 
   Future<Database> _getDb() async {
@@ -104,23 +115,8 @@ class FilmsLocalImpl {
     db.execute(
         "CREATE TABLE IF NOT EXISTS $filmsTable (id INTEGER PRIMARY KEY, adult INTEGER, backdropPath TEXT, originalLanguage TEXT, originalTitle TEXT,  budget INTEGER, overview TEXT, popularity DOUBLE, posterPath TEXT, releaseDate TEXT, runtime INTEGER, status TEXT, tagline TEXT, title TEXT, voteAverage DOUBLE, genres TEXT, productionCompanies TEXT)");
     db.execute(
-        "CREATE TABLE IF NOT EXISTS $genresTable (id INTEGER PRIMARY KEY, name TEXT, filmForeignKey INTEGER, FOREIGN KEY(filmForeignKey) REFERENCES $filmsTable(id))");
+        "CREATE TABLE IF NOT EXISTS $genresTable (id INTEGER, name TEXT, filmForeignKey INTEGER, PRIMARY KEY (id, filmForeignKey))");
     db.execute(
-        "CREATE TABLE IF NOT EXISTS $companiesTable (id INTEGER PRIMARY KEY, name TEXT, logoPath TEXT, originCountry TEXT, filmForeignKey INTEGER, FOREIGN KEY(filmForeignKey) REFERENCES $filmsTable(id))");
-  }
-
-  Future<bool> getIsFavouriteFilm(int filmId) async {
-    Database db = await _getDb();
-
-    final films = await db.query(FilmsLocalImpl.filmsTable);
-    final favouriteFilms = films.map((film) {
-      var jsonMap =
-          json.decode(film['genres'] as String) as Map<String, dynamic>;
-      return Film.fromMap(jsonMap);
-    });
-
-    await closeDb();
-
-    return favouriteFilms.toList().any((element) => element.id == filmId);
+        "CREATE TABLE IF NOT EXISTS $companiesTable (id INTEGER, name TEXT, logoPath TEXT, originCountry TEXT, filmForeignKey INTEGER, PRIMARY KEY (id, filmForeignKey))");
   }
 }

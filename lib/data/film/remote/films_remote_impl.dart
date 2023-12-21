@@ -26,8 +26,9 @@ class FilmsRemoteImpl {
     }
   }
 
-  Future<FilmResponse> getFilms(int? selectedGenre) async {
+  Future<FilmResponse> getFilms(int? selectedGenre, int page) async {
     final Map<String, dynamic> searchQueryParams = {
+      "page": page,
       "with_genres": selectedGenre
     };
     searchQueryParams.addAll(apiKey);
@@ -54,8 +55,11 @@ class FilmsRemoteImpl {
     return getRequestResponseFilms(NetworkConstants.UPCOMING_FILMS_PATH);
   }
 
-  Future<FilmResponse> getFilmsByTitle(String title) async {
-    final Map<String, String> searchQueryParams = {"query": title};
+  Future<FilmResponse> getFilmsByTitle(String title, int page) async {
+    final Map<String, dynamic> searchQueryParams = {
+      "query": title,
+      "page": page
+    };
     searchQueryParams.addAll(apiKey);
     try {
       final response = await _networkClient.dio.get(

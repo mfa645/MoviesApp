@@ -46,14 +46,27 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
           break;
       }
     });
-
     _filmsViewModel.getIsFavouriteFilm.stream.listen((state) {
-      setState(() {
-        _isFavourite = state;
-      });
+      switch (state.status) {
+        case Status.LOADING:
+          LoadingView.show(context);
+          break;
+        case Status.SUCCESS:
+          LoadingView.hide();
+          setState(() {
+            _isFavourite = state.data!;
+          });
+          break;
+        case Status.ERROR:
+          LoadingView.hide();
+          ErrorView.show(context, state.exception!.toString(), () {
+            _filmsViewModel.fetchFilmDetails(widget.filmId);
+          });
+          break;
+      }
     });
     _filmsViewModel.fetchFilmDetails(widget.filmId);
-    _filmsViewModel.getIsFavouriteFilm;
+    _filmsViewModel.fetchIsFavouriteFilm(widget.filmId);
   }
 
   @override
@@ -83,7 +96,6 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                           ? _filmsViewModel
                               .removeFilmFromFavourites(widget.filmId)
                           : _filmsViewModel.addFilmToFavourites(_film!);
-                      _filmsViewModel.getIsFavouriteFilm;
                     }
                   },
                   icon: Icon(
@@ -154,7 +166,8 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                                 ),
                                 Row(
                                   children: [
-                                    StarRating(rating: _film!.voteAverage),
+                                    StarRating(
+                                        rating: _film!.voteAverage ?? 0.0),
                                     const SizedBox(
                                       width: 30,
                                     ),

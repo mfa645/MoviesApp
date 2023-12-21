@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/di/app_modules.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
+import 'package:movies_app/presentation/navigation/navigation_routes.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
 import 'package:movies_app/presentation/widget/film/film_list_row.dart';
@@ -14,7 +15,8 @@ class FilmFavouritesPage extends StatefulWidget {
   State<FilmFavouritesPage> createState() => _FilmFavouritesPageState();
 }
 
-class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
+class _FilmFavouritesPageState extends State<FilmFavouritesPage>
+    with WidgetsBindingObserver {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
 
   List<Film> _films = [];
@@ -43,6 +45,26 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
       }
     });
     _filmsViewModel.fetchFavouriteFilms();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    // These are the callbacks
+    switch (state) {
+      default:
+        _filmsViewModel.fetchFavouriteFilms();
+    }
+  }
+
+  @override
+  void dispose() {
+    // Remove the observer
+    WidgetsBinding.instance.removeObserver(this);
+
+    super.dispose();
   }
 
   @override
@@ -79,7 +101,10 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
                   final film = _films[index];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: FilmListRow(film: film),
+                    child: FilmListRow(
+                      film: film,
+                      route: NavigationRoutes.FILM_FAVOURITES_DETAIL_ROUTE,
+                    ),
                   );
                 },
               ),

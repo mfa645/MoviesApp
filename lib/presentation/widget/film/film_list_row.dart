@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:movies_app/data/remote/network_constants.dart';
 import 'package:movies_app/model/film.dart';
-import 'package:movies_app/presentation/navigation/navigation_routes.dart';
 
 class FilmListRow extends StatelessWidget {
   final Film film;
-
-  const FilmListRow({super.key, required this.film});
+  final String route;
+  const FilmListRow({super.key, required this.film, required this.route});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go(NavigationRoutes.FILM_DISCOVER_DETAIL_ROUTE, extra: film.id);
+        context.go(route, extra: film.id);
       },
       child: Center(
         child: SizedBox(

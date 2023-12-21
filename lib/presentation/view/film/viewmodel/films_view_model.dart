@@ -19,9 +19,10 @@ class FilmsViewModel extends BaseViewModel {
 
   final StreamController<FilmResponseState> getFilmsState = StreamController();
 
-  final StreamController<bool> getIsFavouriteFilm = StreamController();
-
   final StreamController<ResourceState<List<Film>>> getFavouriteFilms =
+      StreamController();
+
+  final StreamController<ResourceState<bool>> getIsFavouriteFilm =
       StreamController();
 
   final StreamController<FilmResponseState> getUpcomingFilmsState =
@@ -44,11 +45,11 @@ class FilmsViewModel extends BaseViewModel {
             (error) => getFilmGenresState.add(ResourceState.error(error)));
   }
 
-  fetchFilms(int? selectedGenre) {
+  fetchFilms(int? selectedGenre, int page) {
     getFilmsState.add(ResourceState.loading());
 
     _filmsRepository
-        .getFilms(selectedGenre)
+        .getFilms(selectedGenre, page)
         .then((value) => getFilmsState.add(ResourceState.success(value)))
         .catchError((error) => getFilmsState.add(ResourceState.error(error)));
   }
@@ -76,16 +77,20 @@ class FilmsViewModel extends BaseViewModel {
 
   removeFilmFromFavourites(int id) {
     _filmsRepository.removeFilmFromFavourites(id);
+    fetchIsFavouriteFilm(id);
   }
 
   addFilmToFavourites(Film film) {
     _filmsRepository.addFilmToFavourites(film);
+    fetchIsFavouriteFilm(film.id);
   }
 
   fetchIsFavouriteFilm(int filmId) {
     _filmsRepository
         .getIsFavouriteFilm(filmId)
-        .then((value) => getIsFavouriteFilm.add(value));
+        .then((value) => getIsFavouriteFilm.add(ResourceState.success(value)))
+        .catchError(
+            (error) => getIsFavouriteFilm.add(ResourceState.error(error)));
   }
 
   fetchWeekTrendingFilms() {
@@ -110,11 +115,11 @@ class FilmsViewModel extends BaseViewModel {
             (error) => getUpcomingFilmsState.add(ResourceState.error(error)));
   }
 
-  fetchFilmsByTitle(String title) {
+  fetchFilmsByTitle(String title, int page) {
     getFilmsState.add(ResourceState.loading());
 
     _filmsRepository
-        .getFilmsByTitle(title)
+        .getFilmsByTitle(title, page)
         .then((value) => getFilmsState.add(ResourceState.success(value)))
         .catchError((error) => getFilmsState.add(ResourceState.error(error)));
   }
@@ -136,5 +141,7 @@ class FilmsViewModel extends BaseViewModel {
     getTopRatedFilmsState.close();
     getWeekTrendingFilmsState.close();
     getFilmsState.close();
+    getFavouriteFilms.close();
+    getIsFavouriteFilm.close();
   }
 }

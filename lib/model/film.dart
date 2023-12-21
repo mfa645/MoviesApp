@@ -39,14 +39,13 @@ class Film {
   String originalTitle;
   List<ProductionCompany>? productionCompanies;
   String overview;
-  double popularity;
   String? posterPath;
   String releaseDate;
   int? runtime;
   String? status;
   String? tagline;
   String title;
-  double voteAverage;
+  double? voteAverage;
 
   Film({
     required this.adult,
@@ -58,7 +57,6 @@ class Film {
     required this.originalTitle,
     required this.productionCompanies,
     required this.overview,
-    required this.popularity,
     required this.releaseDate,
     required this.runtime,
     required this.posterPath,
@@ -88,7 +86,6 @@ class Film {
             ? List<ProductionCompany>.from(filmJson["production_companies"]
                 .map((x) => ProductionCompany.fromJson(x)))
             : null,
-        popularity: filmJson["popularity"]?.toDouble(),
         posterPath: filmJson["poster_path"],
         releaseDate: filmJson["release_date"],
         runtime: filmJson["runtime"],
@@ -119,7 +116,6 @@ class Film {
         originalLanguage: filmJson["originalLanguage"],
         originalTitle: filmJson["originalTitle"],
         overview: filmJson["overview"],
-        popularity: filmJson["popularity"]?.toDouble(),
         posterPath: filmJson["posterPath"],
         releaseDate: filmJson["releaseDate"],
         runtime: filmJson["runtime"],
@@ -149,7 +145,7 @@ class Film {
         "originalLanguage": originalLanguage,
         "originalTitle": originalTitle,
         "overview": overview,
-        "popularity": popularity,
+        "popularity": null,
         "posterPath": posterPath,
         "releaseDate": releaseDate,
         "runtime": runtime,

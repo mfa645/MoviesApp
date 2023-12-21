@@ -3,6 +3,7 @@ import 'package:movies_app/di/app_modules.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/model/genre.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
+import 'package:movies_app/presentation/navigation/navigation_routes.dart';
 import 'package:movies_app/presentation/utils/debouncer/text_field_debouncer.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/custom_searchbar.dart';
@@ -20,14 +21,52 @@ class FilmsDiscoverPage extends StatefulWidget {
 
 class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
-  List<Film> _films = [];
   final _textFieldController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  int _page = 1;
+  int _totalPages = -1;
+
+  List<Film> _films = [];
   List<Genre> _genres = [];
-  String? selectedGenre;
+
+  Genre? selectedGenre;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _filmsViewModel.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
+
+/*
+    _filmsViewModel.getFilmsState.stream.listen((state) {
+      switch (state.status) {
+        case Status.LOADING:
+          LoadingView.show(context);
+          break;
+        case Status.SUCCESS:
+          LoadingView.hide();
+          final end = _page == state.data!.totalPages;
+          if (end) {
+            _pagingController.appendLastPage([]);
+            return;
+          }
+
+          _pagingController.appendPage(state.data!.results, ++_page);
+          setState(() {});
+          break;
+        case Status.ERROR:
+          LoadingView.hide();
+          ErrorView.show(context, state.exception!.toString(), () {
+            _filmsViewModel.fetchFilms(null, 1);
+          });
+          break;
+      }
+    });*/
 
     _filmsViewModel.getFilmsState.stream.listen((state) {
       switch (state.status) {
@@ -37,13 +76,19 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
         case Status.SUCCESS:
           LoadingView.hide();
           setState(() {
-            _films = state.data!.results;
+            if (_page > 1) {
+              _films.addAll(state.data!.results);
+            } else {
+              _totalPages = state.data!.totalPages;
+              _films = state.data!.results;
+              _scrollController.jumpTo(0.0);
+            }
           });
           break;
         case Status.ERROR:
           LoadingView.hide();
           ErrorView.show(context, state.exception!.toString(), () {
-            _filmsViewModel.fetchFilms(null);
+            _filmsViewModel.fetchFilmGenres();
           });
           break;
       }
@@ -68,7 +113,14 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
           break;
       }
     });
-
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          _page < _totalPages) {
+        _page++;
+        _addFilms(_page);
+      }
+    });
     _filmsViewModel.fetchFilmGenres();
   }
 
@@ -114,9 +166,11 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                       selectedGenre = null;
                     }
                     debouncer.run(() {
+                      _page = 1;
                       text.isEmpty
-                          ? _filmsViewModel.fetchFilms(null)
-                          : _filmsViewModel.fetchFilmsByTitle(text);
+                          ? _filmsViewModel.fetchFilms(null, 1)
+                          : _filmsViewModel.fetchFilmsByTitle(text, 1);
+                      setState(() {});
                     });
                   }),
             ),
@@ -142,8 +196,11 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                                   final genre = _genres[index];
                                   return GestureDetector(
                                       onTap: () {
-                                        selectedGenre = genre.name;
-                                        _filmsViewModel.fetchFilms(genre.id);
+                                        selectedGenre = genre;
+                                        _page = 1;
+                                        _filmsViewModel.fetchFilms(
+                                            genre.id, _page);
+                                        setState(() {});
                                       },
                                       child: GenreListRow(genre: genre));
                                 }),
@@ -152,68 +209,88 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                       ),
                     ),
                   )
-                : _films.isNotEmpty
-                    ? Expanded(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                mainAxisAlignment: selectedGenre != null
-                                    ? MainAxisAlignment.spaceBetween
-                                    : MainAxisAlignment.start,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      selectedGenre != null
-                                          ? selectedGenre = null
-                                          : _textFieldController.text = "";
-                                      setState(() {});
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_back,
-                                          size: 25,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (selectedGenre != null)
-                                    Text(
-                                      "$selectedGenre",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: _films.length,
-                                itemBuilder: (_, index) {
-                                  final film = _films[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: FilmListRow(film: film),
-                                  );
+                : Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            mainAxisAlignment: selectedGenre != null
+                                ? MainAxisAlignment.spaceBetween
+                                : MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  selectedGenre != null
+                                      ? selectedGenre = null
+                                      : _textFieldController.text = "";
+                                  setState(() {});
                                 },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_back,
+                                      size: 25,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              if (selectedGenre != null)
+                                Text(
+                                  selectedGenre!.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    : const Text("No films availables for your search"),
+                        Expanded(
+                          child: Scrollbar(
+                            controller: _scrollController,
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              itemCount: _films.length,
+                              itemBuilder: (context, index) {
+                                final item = _films[index];
+                                return FilmListRow(
+                                  film: item,
+                                  route: NavigationRoutes
+                                      .FILM_DISCOVER_DETAIL_ROUTE,
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return const Divider();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
           ]),
         ),
       ),
     );
+  }
+
+  Future<void> _addFilms(int page) async {
+    if (page == 1) {
+      _films.clear();
+    }
+
+    if (_textFieldController.text.isNotEmpty) {
+      _filmsViewModel.fetchFilmsByTitle(_textFieldController.text, page);
+    } else {
+      if (selectedGenre != null) {
+        _filmsViewModel.fetchFilms(selectedGenre!.id, page);
+      } else {}
+    }
+    setState(() {});
   }
 }
