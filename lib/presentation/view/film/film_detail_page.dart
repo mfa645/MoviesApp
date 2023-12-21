@@ -93,8 +93,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                   onPressed: () {
                     if (_film != null) {
                       _isFavourite
-                          ? _filmsViewModel
-                              .removeFilmFromFavourites(widget.filmId)
+                          ? _filmsViewModel.removeFilmFromFavourites(_film!.id)
                           : _filmsViewModel.addFilmToFavourites(_film!);
                     }
                   },

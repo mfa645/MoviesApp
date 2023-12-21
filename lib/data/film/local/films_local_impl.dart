@@ -62,7 +62,7 @@ class FilmsLocalImpl {
       where: 'filmForeignKey = ?',
       whereArgs: [filmId],
     );
-    closeDb();
+    await closeDb();
   }
 
   Future addFilmToFavourites(Film film) async {
@@ -79,7 +79,7 @@ class FilmsLocalImpl {
             FilmsLocalImpl.companiesTable, productionCompany.toDBMap(film.id));
       }
     }
-    closeDb();
+    await closeDb();
   }
 
   Future<bool> getIsFavouriteFilm(int filmId) async {

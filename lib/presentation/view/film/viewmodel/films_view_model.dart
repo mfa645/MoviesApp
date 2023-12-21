@@ -75,13 +75,13 @@ class FilmsViewModel extends BaseViewModel {
             (error) => getFavouriteFilms.add(ResourceState.error(error)));
   }
 
-  removeFilmFromFavourites(int id) {
-    _filmsRepository.removeFilmFromFavourites(id);
+  removeFilmFromFavourites(int id) async {
+    await _filmsRepository.removeFilmFromFavourites(id);
     fetchIsFavouriteFilm(id);
   }
 
-  addFilmToFavourites(Film film) {
-    _filmsRepository.addFilmToFavourites(film);
+  addFilmToFavourites(Film film) async {
+    await _filmsRepository.addFilmToFavourites(film);
     fetchIsFavouriteFilm(film.id);
   }
 
