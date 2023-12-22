@@ -13,13 +13,11 @@ class FilmsLocalImpl {
 
   Future<List<Film>> getFavouriteFilms() async {
     Database db = await _getDb();
-    //Collect films, genres and production companies
     final filmsData = await db.query(FilmsLocalImpl.filmsTable);
     final genresData = await db.query(FilmsLocalImpl.genresTable);
     final productionCompaniesData =
         await db.query(FilmsLocalImpl.companiesTable);
 
-    //Decode entities
     var favouriteFilms = filmsData.map((e) {
       return Film.fromDBMap(e);
     });
@@ -31,7 +29,6 @@ class FilmsLocalImpl {
     });
     await closeDb();
 
-    //Mix films with their genres and companies
     return favouriteFilms.map((film) {
       final filmGenres = favouriteGenres
           .where((element) => element.filmForeignKey == film.id)

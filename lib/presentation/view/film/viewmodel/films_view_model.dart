@@ -1,15 +1,20 @@
 import 'dart:async';
 
+import 'package:movies_app/di/app_modules.dart';
 import 'package:movies_app/domain/films_repository.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/model/genre.dart';
 import 'package:movies_app/presentation/base/base_view_model.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
+import 'package:movies_app/presentation/provider/favourite_films_provider.dart';
 
 typedef FilmResponseState = ResourceState<FilmResponse>;
 
 class FilmsViewModel extends BaseViewModel {
   final FilmsRepository _filmsRepository;
+
+  final FavouriteFilmProvider _favouriteFilmProvider =
+      inject<FavouriteFilmProvider>();
 
   final StreamController<ResourceState<List<Genre>>> getFilmGenresState =
       StreamController();
@@ -78,11 +83,13 @@ class FilmsViewModel extends BaseViewModel {
   removeFilmFromFavourites(int id) async {
     await _filmsRepository.removeFilmFromFavourites(id);
     fetchIsFavouriteFilm(id);
+    _favouriteFilmProvider.updateFilmRemovedFromFavourites(id);
   }
 
   addFilmToFavourites(Film film) async {
     await _filmsRepository.addFilmToFavourites(film);
     fetchIsFavouriteFilm(film.id);
+    _favouriteFilmProvider.updateFilmAddedToFavourites(film);
   }
 
   fetchIsFavouriteFilm(int filmId) {

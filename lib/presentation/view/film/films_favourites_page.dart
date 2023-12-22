@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/di/app_modules.dart';
-import 'package:movies_app/model/film.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
 import 'package:movies_app/presentation/navigation/navigation_routes.dart';
+import 'package:movies_app/presentation/provider/favourite_films_provider.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
 import 'package:movies_app/presentation/widget/film/film_list_row.dart';
@@ -14,18 +14,18 @@ class FilmFavouritesPage extends StatefulWidget {
   State<FilmFavouritesPage> createState() => _FilmFavouritesPageState();
 }
 
-final GlobalKey<_FilmFavouritesPageState> myStreamPageKey =
-    GlobalKey<_FilmFavouritesPageState>();
-
 class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
-
-  List<Film> _films = [];
-  final ScrollController _scrollController = ScrollController();
+  final FavouriteFilmProvider _favouriteFilmsProvider =
+      inject<FavouriteFilmProvider>();
 
   @override
   void initState() {
     super.initState();
+
+    _favouriteFilmsProvider.addListener(() {
+      setState(() {});
+    });
 
     _filmsViewModel.getFavouriteFilms.stream.listen((state) {
       switch (state.status) {
@@ -35,8 +35,9 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
         case Status.SUCCESS:
           LoadingView.hide();
           setState(() {
-            _films = state.data!;
+            _favouriteFilmsProvider.updateFavouriteFilms(state.data!);
           });
+
           break;
         case Status.ERROR:
           LoadingView.hide();
@@ -47,11 +48,6 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
       }
     });
     _filmsViewModel.fetchFavouriteFilms();
-  }
-
-  void resetState() {
-    _filmsViewModel.fetchFavouriteFilms();
-    setState(() {});
   }
 
   @override
@@ -89,9 +85,10 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: _films.length,
+                itemCount: _favouriteFilmsProvider.favouritesFilmList.length,
                 itemBuilder: (_, index) {
-                  final film = _films[index];
+                  final film =
+                      _favouriteFilmsProvider.favouritesFilmList[index];
                   return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Dismissible(

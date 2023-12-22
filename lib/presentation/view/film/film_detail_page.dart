@@ -5,6 +5,7 @@ import 'package:movies_app/data/remote/network_constants.dart';
 import 'package:movies_app/di/app_modules.dart';
 import 'package:movies_app/model/film.dart';
 import 'package:movies_app/presentation/model/resource_state.dart';
+import 'package:movies_app/presentation/provider/favourite_films_provider.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 import 'package:movies_app/presentation/widget/error/error_view.dart';
 import 'package:movies_app/presentation/widget/loading/loading_view.dart';
@@ -19,10 +20,10 @@ class FilmDetailPage extends StatefulWidget {
 
 class _FilmDetailPageState extends State<FilmDetailPage> {
   final FilmsViewModel _filmsViewModel = inject<FilmsViewModel>();
+  final FavouriteFilmProvider _favouriteFilmsProvider =
+      inject<FavouriteFilmProvider>();
 
   Film? _film;
-  bool _isFavourite = false;
-
   @override
   void dispose() {
     super.dispose();
@@ -32,6 +33,10 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
   @override
   void initState() {
     super.initState();
+
+    _favouriteFilmsProvider.addListener(() {
+      if (mounted) setState(() {});
+    });
 
     _filmsViewModel.getFilmDetailState.stream.listen((state) {
       switch (state.status) {
@@ -60,7 +65,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
         case Status.SUCCESS:
           LoadingView.hide();
           setState(() {
-            _isFavourite = state.data!;
+            _favouriteFilmsProvider.updateIsFavouriteFilm(state.data!);
           });
           break;
         case Status.ERROR:
@@ -98,13 +103,15 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                 child: IconButton(
                   onPressed: () {
                     if (_film != null) {
-                      _isFavourite
+                      _favouriteFilmsProvider.isFavouriteFilm
                           ? _filmsViewModel.removeFilmFromFavourites(_film!.id)
                           : _filmsViewModel.addFilmToFavourites(_film!);
                     }
                   },
                   icon: Icon(
-                    _isFavourite ? Icons.favorite : Icons.favorite_outline,
+                    _favouriteFilmsProvider.isFavouriteFilm
+                        ? Icons.favorite
+                        : Icons.favorite_outline,
                     color: Colors.white,
                     size: 30,
                   ),

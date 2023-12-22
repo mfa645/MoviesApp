@@ -42,32 +42,6 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
   void initState() {
     super.initState();
 
-/*
-    _filmsViewModel.getFilmsState.stream.listen((state) {
-      switch (state.status) {
-        case Status.LOADING:
-          LoadingView.show(context);
-          break;
-        case Status.SUCCESS:
-          LoadingView.hide();
-          final end = _page == state.data!.totalPages;
-          if (end) {
-            _pagingController.appendLastPage([]);
-            return;
-          }
-
-          _pagingController.appendPage(state.data!.results, ++_page);
-          setState(() {});
-          break;
-        case Status.ERROR:
-          LoadingView.hide();
-          ErrorView.show(context, state.exception!.toString(), () {
-            _filmsViewModel.fetchFilms(null, 1);
-          });
-          break;
-      }
-    });*/
-
     _filmsViewModel.getFilmsState.stream.listen((state) {
       switch (state.status) {
         case Status.LOADING:

@@ -4,6 +4,7 @@ import 'package:movies_app/data/film/local/films_local_impl.dart';
 import 'package:movies_app/data/film/remote/films_remote_impl.dart';
 import 'package:movies_app/data/remote/network_client.dart';
 import 'package:movies_app/domain/films_repository.dart';
+import 'package:movies_app/presentation/provider/favourite_films_provider.dart';
 import 'package:movies_app/presentation/view/film/viewmodel/films_view_model.dart';
 
 final inject = GetIt.instance;
@@ -16,6 +17,7 @@ class AppModules {
 
   _setupMainModule() {
     inject.registerSingleton(NetworkClient());
+    inject.registerSingleton(FavouriteFilmProvider());
   }
 
   _setupFilmModule() {

@@ -3,9 +3,6 @@ class NetworkConstants {
 
   static const FILMS_PATH = "$BASE_URL/movie";
   static const IMAGES_PATH = "https://image.tmdb.org/t/p/w500";
-  //Videos
-  //Similar
-  //Reviews
 
   static const DISCOVER_FILMS_PATH = "$BASE_URL/discover/movie";
 
