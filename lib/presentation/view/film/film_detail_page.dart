@@ -148,7 +148,7 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
                                       fit: BoxFit.fitHeight,
                                     )
                                   : Image.asset(
-                                      "assets/images/default_movie.png"),
+                                      "assets/images/movie_placeholder_horizontal.png"),
                             ),
                             Container(
                               height: 300,

@@ -87,7 +87,8 @@ class _UpcomingFilmsHorizontalListState
                                 film.backdropPath!,
                             fit: BoxFit.fitHeight,
                           )
-                        : Image.asset("assets/images/default_movie.png"),
+                        : Image.asset(
+                            "assets/images/movie_placeholder_horizontal.png"),
                   ),
                 ),
                 Container(
