@@ -91,30 +91,10 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
                       _favouriteFilmsProvider.favouritesFilmList[index];
                   return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Dismissible(
-                          key: Key(film.id.toString()),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            color: Colors.red,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.white,
-                                  size: 40,
-                                ),
-                              ],
-                            ),
-                          ),
-                          onDismissed: (_) {
-                            _filmsViewModel.removeFilmFromFavourites(film.id);
-                          },
-                          child: FilmListRow(
-                            film: film,
-                            route:
-                                NavigationRoutes.FILM_FAVOURITES_DETAIL_ROUTE,
-                          )));
+                      child: FilmListRow(
+                        film: film,
+                        route: NavigationRoutes.FILM_FAVOURITES_DETAIL_ROUTE,
+                      ));
                 },
               ),
             ),
