@@ -124,6 +124,10 @@ class _FilmsDiscoverPageState extends State<FilmsDiscoverPage> {
                             fontSize: 40, fontWeight: FontWeight.bold)),
                   ),
                   Icon(
+                    Icons.search_sharp,
+                    size: 40,
+                  ),
+                  Icon(
                     Icons.movie,
                     size: 40,
                   )

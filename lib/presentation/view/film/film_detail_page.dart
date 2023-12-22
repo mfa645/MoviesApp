@@ -131,7 +131,9 @@ class _FilmDetailPageState extends State<FilmDetailPage> {
             child: SingleChildScrollView(
                 child: _film == null
                     ? const Center(
-                        child: Text("There was an error loading the film"),
+                        child: CircularProgressIndicator(
+                          color: Colors.blueAccent,
+                        ),
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

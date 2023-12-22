@@ -60,7 +60,7 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -74,7 +74,7 @@ class _FilmFavouritesPageState extends State<FilmFavouritesPage> {
                   Icon(
                     Icons.star,
                     size: 40,
-                    color: Colors.yellowAccent,
+                    color: Color.fromARGB(255, 202, 169, 20),
                   ),
                   Icon(
                     Icons.movie,

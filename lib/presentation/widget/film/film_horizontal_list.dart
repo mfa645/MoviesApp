@@ -42,7 +42,11 @@ class FilmHorizontalList extends StatelessWidget {
                 }),
           )
         else
-          const Text("No films availables yet"),
+          const Center(
+            child: CircularProgressIndicator(
+              color: Colors.blueAccent,
+            ),
+          ),
       ],
     ));
   }

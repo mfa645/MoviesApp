@@ -40,7 +40,11 @@ class _UpcomingFilmsHorizontalListState
                 dynamicItemSize: true,
               ))
         else
-          const Text("No upcoming films availables yet"),
+          const Center(
+            child: CircularProgressIndicator(
+              color: Colors.blueAccent,
+            ),
+          ),
         const SizedBox(
           height: 10,
         ),

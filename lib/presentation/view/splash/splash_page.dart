@@ -30,8 +30,12 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset("assets/lottie/splash_animation.json",
-                repeat: true, animate: true),
+            SizedBox(
+              height: 300,
+              width: 300,
+              child: Lottie.asset("assets/lottie/splash_animation.json",
+                  repeat: true, animate: true),
+            ),
             const Text(
               "Movies app",
               style: TextStyle(
@@ -39,6 +43,16 @@ class _SplashPageState extends State<SplashPage> {
                   fontWeight: FontWeight.bold,
                   fontSize: 30),
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+              height: 30,
+              width: 30,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            )
           ],
         ),
       ),
