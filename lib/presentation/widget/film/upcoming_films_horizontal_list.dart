@@ -92,10 +92,10 @@ class _UpcomingFilmsHorizontalListState
                   ),
                 ),
                 Container(
-                  width: 380,
-                  height: double.infinity,
-                  decoration:
-                      BoxDecoration(color: Colors.black.withOpacity(0.30)),
+                  height: 242,
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.30),
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 Positioned(
                   bottom: 10,

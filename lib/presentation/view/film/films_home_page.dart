@@ -101,7 +101,7 @@ class _FilmsHomePageState extends State<FilmsHomePage> {
         bottom: false,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
